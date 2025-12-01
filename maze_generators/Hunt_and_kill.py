@@ -102,6 +102,8 @@ def maze_convert(maze):
             new_maze[(i, j)].add((i - 1, j ))
         if maze[(i, j)].down:
             new_maze[(i, j)].add((i + 1, j))
+    for pos in new_maze:
+        new_maze[pos] = list(new_maze[pos])
     return new_maze
 
 if __name__ == '__main__':
