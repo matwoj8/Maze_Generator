@@ -1,6 +1,6 @@
 import pygame
 import sys
-import Binary_tree_maze as bt
+import maze_generators.Binary_tree_maze as bt
 import converter as ct
 import time
 
