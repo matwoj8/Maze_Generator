@@ -1,4 +1,5 @@
 from random import randint
+from converter import *
 
 class Node():
     def __init__(self, left = None, right = None, up = None, down = None, position = None):
@@ -7,9 +8,6 @@ class Node():
         self.up = up
         self.down = down
         self.position = position
-
-    def printPosition(self):
-        return f"({self.position[0]}, {self.position[1]})"
 
 def generate_maze(m: int, n: int) -> dict:
     maze = {(i, j): Node(position = (i, j)) for i in range(m) for j in range(n)}
@@ -34,10 +32,7 @@ def generate_maze(m: int, n: int) -> dict:
     return maze
 
 
-# def print_maze(maze):
-#     for node in maze.values():
-#         print(node.printPosition(), node.left, node.right, node.up, node.down)
-
 if __name__ == '__main__':
     maze = generate_maze(3, 4)
-    # print_maze(maze)
+    new_maze = maze_convert(maze)
+    print(new_maze)
