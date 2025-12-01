@@ -33,6 +33,6 @@ def generate_maze(m: int, n: int) -> dict:
 
 
 if __name__ == '__main__':
-    maze = generate_maze(3, 4)
+    maze = generate_maze(3, 3)
     new_maze = maze_convert(maze)
     print(new_maze)
