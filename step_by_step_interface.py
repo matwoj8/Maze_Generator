@@ -34,8 +34,8 @@ def draw_maze(maze, zoom, CELL_SIZE, current_pos, visited):
             for cell in maze[pos]:
                 cx, cy = cell
 
-                pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
-                                 (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
+                #pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
+                #                 (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
 
                 if cx == px+1 and cy == py: walls[3] = 0
                 elif cx == px-1 and cy == py: walls[2] = 0

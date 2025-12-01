@@ -16,8 +16,8 @@ pygame.display.set_caption("Maze Generator")
 print(WIDTH, HEIGHT)
 
 # przykladowa
-maze = ct.maze_convert(bt.generate_maze(10, 10))
-#maze = hak.maze_convert(hak.generate_maze(10, 10))
+#maze = ct.maze_convert(bt.generate_maze(3, 3))
+maze = hak.maze_convert(hak.generate_maze(8, 8))
 #print(maze)
 
 CELL_SIZE = 60
