@@ -1,10 +1,12 @@
 import pygame
 import sys
+import Binary_tree_maze as bt
+import converter as ct
 
 pygame.init()
 
-# --- FULLSCREEN ---
-screen = pygame.display.set_mode((1200,800))
+# FULLSCREEN
+screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 WIDTH, HEIGHT = screen.get_size()
 pygame.display.set_caption("Maze Generator")
 
@@ -13,37 +15,21 @@ pygame.display.set_caption("Maze Generator")
 print(WIDTH, HEIGHT)
 
 # przykladowa
-maze = {
-    (0,0): [(1,0),(0,1)],
-    (1,0): [(0,0),(1,1)],
-    (0,1): [(0,0),(0,2)],
-    (1,1): [(1,0),(2,1)],
-    (2,1): [(1,1),(2,2)],
-    (0,2): [(0,1),(1,2)],
-    (1,2): [(0,2),(2,2)],
-    (2,2): [(1,2),(2,1),(3,2)],
-    (3,2): [(2,2),(4,2)],
-    (4,2): [(3,2),(4,3)],
-    (4,3): [(4,2),(4,4)],
-    (4,4): [(4,3)],
-}
+maze = ct.maze_convert(bt.generate_maze(10, 10))
 
 CELL_SIZE = 60
 
-maxX, maxY = 0, 0
-for pos in maze:
-    for cell in maze[pos]:
-        maxX, maxY = max(cell[0], maxX), max(cell[1], maxY)
-
 #rzeczy do kamery
 last_mouse_pos = pygame.mouse.get_pos()
-x, y = 0, 0
+x, y = 200, 200
 dragging = False
 zoom = 1
+
 # Main Game Loop
 running = True
 while running:
 
+    #eventy
     for event in pygame.event.get():
         # wylaczanie escapem dla pelnego ekranu
         if event.type == pygame.KEYDOWN:
@@ -79,18 +65,39 @@ while running:
 
     screen.fill((255,255,255))
 
-    #pygame.draw.circle(screen, (255, 255, 255), (100+x, 100+y), int(zoom*100), int(zoom*50))
-
     for pos in maze:
-        px, py = pos #rysujemy linie z pos do cela
-        pygame.draw.rect(screen, (50, 50, 50), (px*int(zoom*CELL_SIZE)+x-zoom*CELL_SIZE/2, py*int(zoom*CELL_SIZE)+y-zoom*CELL_SIZE/2,
-                                                int(zoom*CELL_SIZE), int(zoom*CELL_SIZE)), 2)
+        px, py = pos
+        walls = [1,1,1,1] # gora, dol, lewo, prawo
         for cell in maze[pos]:
-            cx, cy = cell #cell x i cell y
-            pygame.draw.line(screen, (255,0,0), (px*int(zoom*CELL_SIZE)+x, py*int(zoom*CELL_SIZE)+y),
-                             (cx*int(zoom*CELL_SIZE)+x, cy*int(zoom*CELL_SIZE)+y), 4)
+            cx, cy = cell
+
+            pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
+                             (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
+
+            if cx == px+1 and cy == py:
+                walls[3] = 0
+            elif cx == px-1 and cy == py:
+                walls[2] = 0
+            elif cx == px and cy == py+1:
+                walls[1] = 0
+            elif cx == px and cy == py-1:
+                walls[0] = 0
+
+            cx = int(px*CELL_SIZE*zoom + x - zoom*CELL_SIZE/2)
+            cy = int(py*CELL_SIZE*zoom + y - zoom*CELL_SIZE/2)
+            l = int(zoom*CELL_SIZE)
+
+        if walls[0]:
+            pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx+l,cy), 2)
+        if walls[1]:
+            pygame.draw.line(screen, (50, 50, 50), (cx,cy+l), (cx+l,cy+l), 2)
+        if walls[2]:
+            pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx,cy+l), 2)
+        if walls[3]:
+            pygame.draw.line(screen, (50, 50, 50), (cx+l,cy), (cx+l,cy+l), 2)
 
     pygame.display.flip()
+
 
 pygame.quit()
 sys.exit()
