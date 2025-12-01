@@ -1,6 +1,7 @@
 import pygame
 import sys
-import Binary_tree_maze as bt
+import maze_generators.Binary_tree_maze as bt
+import maze_generators.Hunt_and_kill as hak
 import converter as ct
 
 pygame.init()
@@ -16,6 +17,8 @@ print(WIDTH, HEIGHT)
 
 # przykladowa
 maze = ct.maze_convert(bt.generate_maze(10, 10))
+#maze = hak.maze_convert(hak.generate_maze(10, 10))
+#print(maze)
 
 CELL_SIZE = 60
 
