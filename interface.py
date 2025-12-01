@@ -25,6 +25,31 @@ x, y = 200, 200
 dragging = False
 zoom = 1
 
+def draw_maze(maze, zoom, CELL_SIZE):
+    for pos in maze:
+        px, py = pos
+        walls = [1,1,1,1] # gora, dol, lewo, prawo
+        for cell in maze[pos]:
+            cx, cy = cell
+
+            pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
+                             (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
+
+            if cx == px+1 and cy == py: walls[3] = 0
+            elif cx == px-1 and cy == py: walls[2] = 0
+            elif cx == px and cy == py+1: walls[1] = 0
+            elif cx == px and cy == py-1: walls[0] = 0
+
+            cx = int(px*CELL_SIZE*zoom + x - zoom*CELL_SIZE/2)
+            cy = int(py*CELL_SIZE*zoom + y - zoom*CELL_SIZE/2)
+            l = int(zoom*CELL_SIZE)
+
+        if walls[0]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx+l,cy), 2)
+        if walls[1]: pygame.draw.line(screen, (50, 50, 50), (cx,cy+l), (cx+l,cy+l), 2)
+        if walls[2]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx,cy+l), 2)
+        if walls[3]: pygame.draw.line(screen, (50, 50, 50), (cx+l,cy), (cx+l,cy+l), 2)
+
+
 # Main Game Loop
 running = True
 while running:
@@ -65,36 +90,10 @@ while running:
 
     screen.fill((255,255,255))
 
-    for pos in maze:
-        px, py = pos
-        walls = [1,1,1,1] # gora, dol, lewo, prawo
-        for cell in maze[pos]:
-            cx, cy = cell
+    #rysujemy maze
+    draw_maze(maze, zoom, CELL_SIZE)
 
-            pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
-                             (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
-
-            if cx == px+1 and cy == py:
-                walls[3] = 0
-            elif cx == px-1 and cy == py:
-                walls[2] = 0
-            elif cx == px and cy == py+1:
-                walls[1] = 0
-            elif cx == px and cy == py-1:
-                walls[0] = 0
-
-            cx = int(px*CELL_SIZE*zoom + x - zoom*CELL_SIZE/2)
-            cy = int(py*CELL_SIZE*zoom + y - zoom*CELL_SIZE/2)
-            l = int(zoom*CELL_SIZE)
-
-        if walls[0]:
-            pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx+l,cy), 2)
-        if walls[1]:
-            pygame.draw.line(screen, (50, 50, 50), (cx,cy+l), (cx+l,cy+l), 2)
-        if walls[2]:
-            pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx,cy+l), 2)
-        if walls[3]:
-            pygame.draw.line(screen, (50, 50, 50), (cx+l,cy), (cx+l,cy+l), 2)
+    #rysowanie maze krok po kroku
 
     pygame.display.flip()
 
