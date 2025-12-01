@@ -83,8 +83,13 @@ while running:
 
     for pos in maze:
         px, py = pos #rysujemy linie z pos do cela
-        pygame.draw.rect(screen, (50, 50, 50), (px*int(zoom*CELL_SIZE)+x-zoom*CELL_SIZE/2, py*int(zoom*CELL_SIZE)+y-zoom*CELL_SIZE/2,
-                                                int(zoom*CELL_SIZE), int(zoom*CELL_SIZE)), 2)
+        cell_size_scaled = CELL_SIZE * zoom
+
+        rect_x = px * cell_size_scaled + x - cell_size_scaled / 2
+        rect_y = py * cell_size_scaled + y - cell_size_scaled / 2
+
+        pygame.draw.rect(screen, (50, 50, 50),
+                         (rect_x, rect_y, cell_size_scaled, cell_size_scaled), 2)
         for cell in maze[pos]:
             cx, cy = cell #cell x i cell y
             pygame.draw.line(screen, (255,0,0), (px*int(zoom*CELL_SIZE)+x, py*int(zoom*CELL_SIZE)+y),
