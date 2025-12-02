@@ -19,8 +19,8 @@ class Node():
 
 def find_visited_neighbour(maze, node):
     if node.left_neighbor and maze[node.left_neighbor].visited: return node.left_neighbor, 0
-    elif node.right_neighbor and maze[node.right_neighbor].visited: return node.right_neighbor, 2
     elif node.up_neighbor and maze[node.up_neighbor].visited: return node.up_neighbor, 1
+    elif node.right_neighbor and maze[node.right_neighbor].visited: return node.right_neighbor, 2
     elif node.down_neighbor and maze[node.down_neighbor].visited: return node.down_neighbor, 3
     else: return None
 
@@ -51,12 +51,14 @@ def actualize_neighbours(node1, node2, option):
         node1.down = True
         node2.up = True
 
-def generate_maze(m: int, n: int) -> dict:
+def generate_maze(m: int, n: int) -> (dict, list):
     maze = {(i, j): Node(position = (i, j), n = n, m = m) for i in range(m) for j in range(n)}
     position= (0,0)
     maze[(0, 0)].visited = True
     mode = 0
     cnt = 1
+
+    path = [(0,0)] # aby wizualizacja była dokładnie tak jak jest krok po kroku
 
     while mode != 2:
         if cnt == m * n: mode = 2
@@ -68,6 +70,7 @@ def generate_maze(m: int, n: int) -> dict:
             else:
                 new_position, option = choice(neighbours)
                 actualize_neighbours(maze[position], maze[new_position], option)
+                path.append(new_position)
                 maze[new_position].visited = True
                 position = new_position
                 cnt += 1
@@ -77,18 +80,21 @@ def generate_maze(m: int, n: int) -> dict:
             for i in range(m):
                 if found: break
                 for j in range(n):
-                    result = find_visited_neighbour(maze, maze[(i, j)])
-                    if result:
-                        position, option = result
-                        new_position = (i, j)
-                        actualize_neighbours(maze[new_position], maze[position], option)
-                        maze[new_position].visited = True
-                        position = new_position
-                        cnt += 1
-                        found = True
-                        break
+                    if maze[(i, j)].visited == False:
+                        result = find_visited_neighbour(maze, maze[(i, j)])
+                        if result:
+                            position, option = result
+                            new_position = (i, j)
+                            actualize_neighbours(maze[new_position], maze[position], option)
+                            maze[new_position].visited = True
+                            position = new_position
+                            path.append(new_position)
+                            cnt += 1
+                            mode = 0
+                            found = True
+                            break
 
-    return maze
+    return maze, path
 
 def maze_convert(maze):
     new_maze = {}
@@ -107,6 +113,6 @@ def maze_convert(maze):
     return new_maze
 
 if __name__ == '__main__':
-    maze = generate_maze(3, 4)
+    maze, path = generate_maze(3, 3)
     new_maze = maze_convert(maze)
     print(new_maze)
