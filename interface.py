@@ -17,7 +17,8 @@ print(WIDTH, HEIGHT)
 
 # przykladowa
 #maze = ct.maze_convert(bt.generate_maze(3, 3))
-maze = hak.maze_convert(hak.generate_maze(8, 8))
+maze, path = hak.generate_maze(80, 80)
+maze = hak.maze_convert(maze)
 #print(maze)
 
 CELL_SIZE = 60
