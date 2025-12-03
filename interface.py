@@ -21,7 +21,7 @@ print(WIDTH, HEIGHT)
 #maze = ct.maze_convert(bt.generate_maze(50, 50))
 #maze = ct.maze_convert(hak.generate_maze(50, 50))
 #maze = ct.maze_convert(tr.generate_maze(10, 10))
-#maze = ct.maze_convert(os.generate_maze(50, 50, 100000))
+#maze = ct.maze_convert(os.generate_maze(50, 50, 10000))
 #print(maze)
 
 CELL_SIZE = 60
