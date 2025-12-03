@@ -1,7 +1,9 @@
 import pygame
 import sys
-import maze_generators.Hunt_and_kill as hak
-import maze_generators.Binary_tree_maze as bt
+import maze_generators.mazes.Binary_Tree_Maze as bt
+import maze_generators.mazes.Trivial_Maze as tr
+import maze_generators.mazes.Hunt_And_Kill_Maze as hak
+import maze_generators.mazes.Origin_Shift_Maze as os
 import maze_generators.converter as ct
 
 pygame.init()
@@ -17,7 +19,9 @@ print(WIDTH, HEIGHT)
 
 # przykladowa
 #maze = ct.maze_convert(bt.generate_maze(50, 50))
-maze = hak.maze_convert(hak.generate_maze(50, 50))
+#maze = ct.maze_convert(hak.generate_maze(50, 50))
+#maze = ct.maze_convert(tr.generate_maze(10, 10))
+#maze = ct.maze_convert(os.generate_maze(50, 50, 100000))
 #print(maze)
 
 CELL_SIZE = 60
