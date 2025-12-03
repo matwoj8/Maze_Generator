@@ -3,7 +3,25 @@ import pygame
 def draw_cell(screen, cell, zoom, CELL_SIZE, px, py, x, y):
     pass
 
+def draw_button(screen, text, x, y, w, h, font, color=(128,128,255)): #mozna jeszcze dac przekierowanie ale bnardziej ogolnie jest tak zrobic ez
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    #print(click)
+    rect = pygame.draw.rect(screen, color, (x, y, w, h), border_radius=5)
+
+    if rect.collidepoint(mouse) and click[0] == 1:
+        return True
+
+    text = font.render(text, True, (0,0,0))
+    screen.blit(text, (x + (w - text.get_width()) // 2,
+                      y + (h - text.get_height()) // 2))
+    return False
+
+
+
 def draw_maze(screen, maze: dict, zoom: float, CELL_SIZE: int = 60, x: int = 200, y: int = 200) -> None:
+    x += 100
+    y += 50
     for pos in maze:
         px, py = pos
         walls = [1,1,1,1] # gora, dol, lewo, prawo
