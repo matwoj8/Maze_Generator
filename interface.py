@@ -17,10 +17,10 @@ print(WIDTH, HEIGHT)
 
 # przykladowa
 #maze = ct.maze_convert(bt.generate_maze(50, 50))
-maze = hak.maze_convert(hak.generate_maze(50, 50))
+maze = hak.maze_convert(hak.generate_maze(50, 50)[0])
 #print(maze)
 
-CELL_SIZE = 60
+CELL_SIZE = 400
 
 #rzeczy do kamery
 last_mouse_pos = pygame.mouse.get_pos()
