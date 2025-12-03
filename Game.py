@@ -2,9 +2,10 @@ import time
 import pygame
 import sys
 import Visuals.utility_functions as utility
-import maze_generators.Hunt_and_kill as hak
-import maze_generators.Binary_tree_maze as bt
+import maze_generators.mazes.Hunt_And_Kill_Maze as hak
+import maze_generators.mazes.Binary_Tree_Maze as bt
 import maze_generators.converter as ct
+import maze_generators as mg
 
 def start(CELL_SIZE: int) -> None:
     pygame.init()
@@ -98,7 +99,7 @@ def start(CELL_SIZE: int) -> None:
                 n, m = input_text.split(' ')
                 print(n ,m)
                 maze, path = hak.generate_maze(12, 12)
-                maze = hak.maze_convert(maze)
+                maze = mg.converter.maze_convert(maze)
                 generated = True
 
             if game_state == "draw_maze":
