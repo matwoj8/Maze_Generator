@@ -1,3 +1,5 @@
+from random import choice
+
 class Node():
     def __init__(self, left = False, up = False, right = False, down = False, position = None, n = None, m = None):
         self.left = left
@@ -35,6 +37,22 @@ def find_all_nonvisited_neighbours(board, node):
         neighbours.append((node.down_neighbor, 3))
     return neighbours
 
+def find_all_neighbours(node):
+    options = []
+    if node.left_neighbor and node.left: options.append(0)
+    if node.up_neighbor and node.up: options.append(1)
+    if node.right_neighbor and node.right: options.append(2)
+    if node.down_neighbor and node.down: options.append(3)
+    return options
+
+def find_all_existing_neighbours(node):
+    options = []
+    if node.left_neighbor: options.append((node.left_neighbor, 0))
+    if node.up_neighbor: options.append((node.up_neighbor, 1))
+    if node.right_neighbor: options.append((node.right_neighbor, 2))
+    if node.down_neighbor: options.append((node.down_neighbor, 3))
+    return options
+
 def actualize_neighbours(node1, node2, option):
     if option == 0:
         node1.left = True
@@ -48,3 +66,16 @@ def actualize_neighbours(node1, node2, option):
     elif option == 3:
         node1.down = True
         node2.up = True
+
+def actualize_neighbour(node1, option):
+    if option == 0: node1.left = True
+    elif option == 1: node1.up = True
+    elif option == 2: node1.right = True
+    elif option == 3: node1.down = True
+
+
+def actualize_not_neighbour(node1, option):
+    if option == 0: node1.left = False
+    elif option == 1: node1.up = False
+    elif option == 2: node1.right = False
+    elif option == 3: node1.down = False
