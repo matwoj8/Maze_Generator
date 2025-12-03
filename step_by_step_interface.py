@@ -2,7 +2,7 @@ import pygame
 import sys
 import maze_generators.Binary_tree_maze as bt
 import maze_generators.Hunt_and_kill as hak
-import converter as ct
+import maze_generators.converter as ct
 import time
 
 pygame.init()

@@ -2,12 +2,14 @@ from random import choice
 from maze_generators.Maze import *
 from maze_generators.converter import *
 
-def generate_maze(m: int, n: int) -> dict:
+def generate_maze(m: int, n: int) -> (dict, list):
     maze = Maze(m, n)
     position= (0,0)
     maze.board[(0, 0)].visited = True
     mode = 0
     cnt = 1
+
+    path = [(0, 0)]
 
     while mode != 2:
         if cnt == m * n: mode = 2
@@ -20,6 +22,7 @@ def generate_maze(m: int, n: int) -> dict:
                 new_position, option = choice(neighbours)
                 actualize_neighbours(maze.board[position], maze.board[new_position], option)
                 maze.board[new_position].visited = True
+                path.append(new_position)
                 position = new_position
                 cnt += 1
 
@@ -35,15 +38,16 @@ def generate_maze(m: int, n: int) -> dict:
                             new_position = (i, j)
                             actualize_neighbours(maze.board[new_position], maze.board[position], option)
                             maze.board[new_position].visited = True
+                            path.append(new_position)
                             position = new_position
                             cnt += 1
                             mode = 0
                             found = True
                             break
 
-    return maze
+    return maze, path
 
 if __name__ == '__main__':
-    maze = generate_maze(3, 3)
+    maze, path = generate_maze(3, 3)
     new_maze = maze_convert(maze)
     print(new_maze)
