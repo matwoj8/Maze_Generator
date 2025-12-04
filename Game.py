@@ -29,6 +29,9 @@ def start(CELL_SIZE: int) -> None:
     clock = pygame.time.Clock()
     FPS = 60
 
+    background = pygame.image.load("Graphics/background.png")
+    background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+
     font = pygame.font.SysFont("comicsans", 30)
     #obecne stany = ["menu", "character_selection", "game"]
     game_state = "menu" # zaczynamy w menu
@@ -69,7 +72,8 @@ def start(CELL_SIZE: int) -> None:
         screen.fill((255, 255, 255))
 
         if game_state == "menu":
-            if utility.draw_button(screen, "Maze generator", WIDTH/2-150, HEIGHT/2-75, 300, 150, font=font):
+            screen.blit(background, (0, 0))
+            if utility.draw_button(screen, "Start Adventure", WIDTH/2-150, HEIGHT/2+200, 300, 150, font=font):
                 game_state = "character_selection"
                 time.sleep(0.1)
         elif game_state == "character_selection":
@@ -89,29 +93,29 @@ def start(CELL_SIZE: int) -> None:
             speed = 3
 
             if keys[pygame.K_a]:
-                x -= speed
+                sx -= speed
             if keys[pygame.K_d]:
-                x += speed
+                sx += speed
             if keys[pygame.K_w]:
-                y -= speed
+                sy -= speed
             if keys[pygame.K_s]:
-                y += speed
+                sy += speed
 
-            # if dragging:
-            #     mx, my = pygame.mouse.get_pos()
-            #     dx = mx - last_mouse_pos[0]
-            #     dy = my - last_mouse_pos[1]
-            #     x += dx
-            #     y += dy
-            #     last_mouse_pos = (mx, my)
+            if dragging:
+                mx, my = pygame.mouse.get_pos()
+                dx = mx - last_mouse_pos[0]
+                dy = my - last_mouse_pos[1]
+                x += dx
+                y += dy
+                last_mouse_pos = (mx, my)
             if not generated:
-                player = character.Character(x, y, chosen_character)
-                maze, path = hak.generate_maze(15, 15)
+                player = character.Character(sx, sy, chosen_character)
+                maze, path = hak.generate_maze(50, 50)
                 maze = ct.maze_convert(maze)
                 generated = True
 
-            utility.draw_maze(screen, maze, zoom, CELL_SIZE, sx, sy)
-            player.update(screen, x, y)
+            utility.draw_maze(screen, maze, zoom, CELL_SIZE, x, y)
+            player.update(screen, sx, sy)
 
         pygame.display.flip()
 
