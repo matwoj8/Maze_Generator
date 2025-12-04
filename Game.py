@@ -25,6 +25,10 @@ def start(CELL_SIZE: int) -> None:
     visited = []
     generated = False
 
+    #ogranicze FPS do 60
+    clock = pygame.time.Clock()
+    FPS = 60
+
     font = pygame.font.SysFont("comicsans", 30)
     #obecne stany = ["menu", "character_selection", "game"]
     game_state = "menu" # zaczynamy w menu
@@ -33,6 +37,7 @@ def start(CELL_SIZE: int) -> None:
 
     running = True
     while running:
+        clock.tick(FPS)
         # eventy
         for event in pygame.event.get():
             # wylaczanie escapem dla pelnego ekranu
@@ -81,7 +86,7 @@ def start(CELL_SIZE: int) -> None:
 
             keys = pygame.key.get_pressed()
 
-            speed = 1
+            speed = 3
 
             if keys[pygame.K_a]:
                 x -= speed
@@ -105,9 +110,8 @@ def start(CELL_SIZE: int) -> None:
                 maze = ct.maze_convert(maze)
                 generated = True
 
-
-            player.update(screen, x, y)
             utility.draw_maze(screen, maze, zoom, CELL_SIZE, sx, sy)
+            player.update(screen, x, y)
 
         pygame.display.flip()
 
