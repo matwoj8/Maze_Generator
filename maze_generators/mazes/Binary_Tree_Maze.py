@@ -5,6 +5,8 @@ from maze_generators.Maze import *
 def generate_maze(m: int, n: int) -> dict:
     maze = Maze(m, n)
 
+    path = []
+
     for i in range(m - 1):
         for j in range(n - 1):
             if randint(0, 1) == 0:
@@ -13,19 +15,22 @@ def generate_maze(m: int, n: int) -> dict:
             else:
                 maze.board[(i, j)].down = True
                 maze.board[(i + 1, j)].up = True
+            path.append((i, j))
+        maze.board[(i, n - 1)].down = True
+        maze.board[(i + 1, n - 1)].up = True
+        path.append((i, n - 1))
 
     for j in range(n - 1):
         maze.board[(m - 1, j)].right = True
         maze.board[(m - 1, j + 1)].left = True
+        path.append((m - 1, j))
 
-    for i in range(m - 1):
-        maze.board[(i, n - 1)].down = True
-        maze.board[(i + 1, n - 1)].up = True
+    path.append((m - 1, n - 1))
 
-    return maze
+    return maze, path
 
 
 if __name__ == '__main__':
-    maze = generate_maze(3, 3)
+    maze, path = generate_maze(3, 3)
     new_maze = maze_convert(maze)
     print(new_maze)
