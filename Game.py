@@ -154,7 +154,7 @@ def start(CELL_SIZE: int) -> None:
             utility.write_text(screen, binary_tree_description, WIDTH * 0.3, HEIGHT * 0.6, font = font, color = (128,128,255))
 
             if steps_generated is False:
-                maze, path = bt.generate_maze(30, 20)
+                maze, path = bt.generate_maze(5, 5)
                 maze = ct.maze_convert(maze)
                 steps_generated = True
                 i = 0
@@ -197,7 +197,7 @@ def start(CELL_SIZE: int) -> None:
             utility.write_text(screen, hunt_and_kill_description, WIDTH * 0.3, HEIGHT * 0.6, font=font, color=(128, 128, 255))
 
             if steps_generated is False:
-                maze, path = hak.generate_maze(30, 20)
+                maze, path = hak.generate_maze(5, 5)
                 maze = ct.maze_convert(maze)
                 steps_generated = True
                 i = 0
