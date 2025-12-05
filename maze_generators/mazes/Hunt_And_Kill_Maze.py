@@ -1,15 +1,16 @@
 from random import choice
+from random import randint
 from maze_generators.Maze import *
 from maze_generators.converter import *
 
 def generate_maze(m: int, n: int) -> (dict, list):
     maze = Maze(m, n)
-    position= (0,0)
+    position= (randint(0 , m),randint(0 , n))
     maze.board[(0, 0)].visited = True
     mode = 0
     cnt = 1
 
-    path = [(0, 0)]
+    path = [position]
 
     while mode != 2:
         if cnt == m * n: mode = 2

@@ -3,6 +3,11 @@ import pygame
 def draw_cell(screen, cell, zoom, CELL_SIZE, px, py, x, y):
     pass
 
+def write_text(screen, text, x, y, font, color):
+    for line in text.split("\n"):
+        screen.blit(font.render(line, True, color), (x, y))
+        y += font.get_height()
+
 def draw_button(screen, text, x, y, w, h, font, color=(128,128,255)): #mozna jeszcze dac przekierowanie ale bnardziej ogolnie jest tak zrobic ez
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
