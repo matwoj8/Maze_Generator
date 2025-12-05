@@ -1,0 +1,7 @@
+The Hunt-and-Kill algorithm begins by selecting a random starting cell and creating a random walk:
+ - From the current cell, it repeatedly moves to a random unvisited neighbor, removing the wall between them.
+ - This continues until the walk reaches a cell with no unvisited neighbors.
+At that point, the algorithm switches to the hunt phase.
+It scans the grid from the top-left corner, searching for the first unvisited cell that has at least one visited neighbor.
+When such a cell is found, it is connected to a visited neighbor, and the random walk continues from there.
+These two phases (random walk and hunting) repeat until all cells in the grid have been visited, producing a complete maze.

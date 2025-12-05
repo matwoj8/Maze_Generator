@@ -7,6 +7,7 @@ import maze_generators.mazes.Binary_Tree_Maze as bt
 import maze_generators.converter as ct
 import maze_generators as mg
 import Player.character as character
+import text
 
 def start(CELL_SIZE: int) -> None:
     pygame.init()
@@ -40,6 +41,21 @@ def start(CELL_SIZE: int) -> None:
     game_state = "menu" # zaczynamy w menu
 
     chosen_character = ""
+
+    #odczytywanie plikow tekstowych
+    with open("text/binary_tree", "r", encoding="utf-8") as f:
+        binary_tree_description = f.read()
+
+    with open("text/hunt_and_kill", "r", encoding="utf-8") as f:
+        hunt_and_kill_description = f.read()
+
+    def reset_stats():
+        nonlocal visited, generated, steps_generated, i
+        visited = []
+        generated = False
+        steps_generated = False
+        i = 0
+        time.sleep(0.2)
 
     running = True
     while running:
@@ -114,28 +130,81 @@ def start(CELL_SIZE: int) -> None:
             if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_cos"
 
         elif game_state == "extras_maze_generators_binary_tree":
-            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font): game_state = "menu"
-            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_binary_tree"
-            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_hunt_and_kill"
-            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_origin_shift"
-            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_cos"
+            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font):
+                game_state = "extras"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_binary_tree"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_hunt_and_kill"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_origin_shift"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_cos"
+                reset_stats()
+                continue
 
+            utility.write_text(screen, binary_tree_description, WIDTH * 0.3, HEIGHT * 0.6, font = font, color = (128,128,255))
 
-        elif game_state == "extras_maze_generators_hunt_and_kill":
-            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font): game_state = "menu"
-            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_binary_tree"
-            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_hunt_and_kill"
-            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_origin_shift"
-            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_cos"
             if steps_generated is False:
-                maze, path = hak.generate_maze(20, 20)
+                maze, path = bt.generate_maze(30, 20)
                 maze = ct.maze_convert(maze)
                 steps_generated = True
                 i = 0
 
             cur = path[i]
             visited.append(cur)
-            utility.draw_visited(screen, maze, zoom, 30, cur, visited, WIDTH * 0.7, HEIGHT * 0.1)
+            utility.draw_visited(screen, maze, zoom, 30, cur, visited, WIDTH * 0.4, HEIGHT * 0.1)
+
+            pygame.display.flip()
+            time.sleep(0.1)
+            i += 1
+            if i >= len(path):
+                i = 0
+                visited = []
+                time.sleep(1)
+
+
+        elif game_state == "extras_maze_generators_hunt_and_kill":
+            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font):
+                game_state = "extras"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_binary_tree"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_hunt_and_kill"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_origin_shift"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_cos"
+                reset_stats()
+                continue
+
+            utility.write_text(screen, hunt_and_kill_description, WIDTH * 0.3, HEIGHT * 0.6, font=font, color=(128, 128, 255))
+
+            if steps_generated is False:
+                maze, path = hak.generate_maze(30, 20)
+                maze = ct.maze_convert(maze)
+                steps_generated = True
+                i = 0
+
+            cur = path[i]
+            visited.append(cur)
+            utility.draw_visited(screen, maze, zoom, 30, cur, visited, WIDTH * 0.4, HEIGHT * 0.1)
 
             pygame.display.flip()
             time.sleep(0.1)
@@ -147,7 +216,7 @@ def start(CELL_SIZE: int) -> None:
 
 
         elif game_state == "extras_maze_generators_origin_shift":
-            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font): game_state = "menu"
+            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font): game_state = "extras"
             if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_binary_tree"
             if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_hunt_and_kill"
             if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05,  font=font): game_state = "extras_maze_generators_origin_shift"
@@ -189,6 +258,7 @@ def start(CELL_SIZE: int) -> None:
 
     pygame.quit()
     sys.exit()
+
 
 
 if __name__ == "__main__":

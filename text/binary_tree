@@ -1,0 +1,6 @@
+The Binary Tree algorithm generates a maze by visiting each cell in the grid exactly once.
+For every cell, the algorithm considers its two possible neighbors: the one to the right and the one below:
+ - If both neighbors exist, it randomly chooses one of them and removes the wall between the two cells.
+ - If only one neighbor is available, it removes the wall in that direction.
+ - If no neighbors exist (bottom-right corner), nothing happens.
+Repeating this process for all cells produces a simple, perfect maze with a characteristic diagonal bias.
