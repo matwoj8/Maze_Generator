@@ -73,19 +73,23 @@ def start(CELL_SIZE: int) -> None:
 
         if game_state == "menu":
             screen.blit(background, (0, 0))
-            if utility.draw_button(screen, "Start Adventure", WIDTH/2-150, HEIGHT/2+200, 300, 150, font=font):
+            if utility.draw_button(screen, "Start Adventure", WIDTH * 0.43, HEIGHT * 0.70, WIDTH * 0.14, HEIGHT * 0.10, font=font):
                 game_state = "character_selection"
                 time.sleep(0.1)
         elif game_state == "character_selection":
-            if utility.draw_button(screen, "Warrior", WIDTH-1820, HEIGHT-800, 500, 600, font=font):
+            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.76, WIDTH * 0.06, HEIGHT * 0.03, font=font):
+                game_state = "menu"
+                time.sleep(0.1)
+            if utility.draw_button(screen, "Warrior", WIDTH * 0.15, HEIGHT * 0.40, WIDTH * 0.15, HEIGHT * 0.30, font=font):
                 game_state = "game"
                 chosen_character = "warrior"
-            if utility.draw_button(screen, "Archer", WIDTH-1210, HEIGHT-800, 500, 600, font=font):
+            if utility.draw_button(screen, "Archer", WIDTH * 0.425, HEIGHT * 0.40, WIDTH * 0.15, HEIGHT * 0.30, font=font):
                 game_state = "game"
                 chosen_character = "archer"
-            if utility.draw_button(screen, "Mage", WIDTH-590, HEIGHT-800, 500, 600, font=font):
+            if utility.draw_button(screen, "Mage", WIDTH * 0.70, HEIGHT * 0.40, WIDTH * 0.15, HEIGHT * 0.30, font=font):
                 game_state = "game"
                 chosen_character = "mage"
+
         elif game_state == "game":
 
             keys = pygame.key.get_pressed()
