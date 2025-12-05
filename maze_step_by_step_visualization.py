@@ -4,6 +4,7 @@ import sys
 import Visuals.utility_functions as utility
 import maze_generators.mazes.Hunt_And_Kill_Maze as hak
 import maze_generators.mazes.Binary_Tree_Maze as bt
+import maze_generators.mazes.Origin_Shift_Maze as os
 import maze_generators.converter as ct
 import maze_generators as mg
 
