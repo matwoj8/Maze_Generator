@@ -25,24 +25,22 @@ def draw_button(screen, text, x, y, w, h, font, color=(128,128,255)): #mozna jes
 
 
 def draw_maze(screen, maze: dict, zoom: float, CELL_SIZE: int = 60, x: int = 200, y: int = 200) -> None:
-    x += 100
-    y += 50
     for pos in maze:
         px, py = pos
         walls = [1,1,1,1] # gora, dol, lewo, prawo
         for cell in maze[pos]:
             cx, cy = cell
 
-            pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
-                             (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
+            #pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
+            #                 (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
 
             if cx == px+1 and cy == py: walls[3] = 0
             elif cx == px-1 and cy == py: walls[2] = 0
             elif cx == px and cy == py+1: walls[1] = 0
             elif cx == px and cy == py-1: walls[0] = 0
 
-            cx = int(px*CELL_SIZE*zoom + x - zoom*CELL_SIZE/2)
-            cy = int(py*CELL_SIZE*zoom + y - zoom*CELL_SIZE/2)
+            cx = int(px*CELL_SIZE*zoom + x)
+            cy = int(py*CELL_SIZE*zoom + y)
             l = int(zoom*CELL_SIZE)
 
         if walls[0]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx+l,cy), 2)
