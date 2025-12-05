@@ -7,11 +7,13 @@ import maze_generators.mazes.Binary_Tree_Maze as bt
 import maze_generators.converter as ct
 import maze_generators as mg
 
-def start(maze, path):
+def start(maze, path, n, m):
+    CELL_SIZE = 60
+
     pygame.init()
 
     # FULLSCREEN
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((n*CELL_SIZE+100, m*CELL_SIZE+100))
     WIDTH, HEIGHT = screen.get_size()
     pygame.display.set_caption("Maze Generator")
 
@@ -19,11 +21,9 @@ def start(maze, path):
     # clock = pygame.time.Clock()
     print(WIDTH, HEIGHT)
 
-    CELL_SIZE = 60
-
     #rzeczy do kamery
     last_mouse_pos = pygame.mouse.get_pos()
-    x, y = 200, 200
+    x, y = 50, 50
     dragging = False
     zoom = 1
 
@@ -31,25 +31,31 @@ def start(maze, path):
         for pos in maze:
             px, py = pos
             walls = [1,1,1,1] # gora, dol, lewo, prawo
+            l = int(zoom * CELL_SIZE)
+
+            pygame.draw.rect(screen, (151, 99, 207),
+                             (px * CELL_SIZE * zoom + x, py * CELL_SIZE * zoom + y, l, l))
+
+
             for cell in maze[pos]:
                 cx, cy = cell
 
-                pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
-                                 (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
+                #pygame.draw.line(screen, (255, 0, 0), (px * int(zoom * CELL_SIZE) + x, py * int(zoom * CELL_SIZE) + y),
+                #                 (cx * int(zoom * CELL_SIZE) + x, cy * int(zoom * CELL_SIZE) + y), 4)
 
                 if cx == px+1 and cy == py: walls[3] = 0
                 elif cx == px-1 and cy == py: walls[2] = 0
                 elif cx == px and cy == py+1: walls[1] = 0
                 elif cx == px and cy == py-1: walls[0] = 0
 
-                cx = int(px*CELL_SIZE*zoom + x - zoom*CELL_SIZE/2)
-                cy = int(py*CELL_SIZE*zoom + y - zoom*CELL_SIZE/2)
+                cx = int(px*CELL_SIZE*zoom + x)
+                cy = int(py*CELL_SIZE*zoom + y)
                 l = int(zoom*CELL_SIZE)
 
-            if walls[0]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx+l,cy), 2)
-            if walls[1]: pygame.draw.line(screen, (50, 50, 50), (cx,cy+l), (cx+l,cy+l), 2)
-            if walls[2]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx,cy+l), 2)
-            if walls[3]: pygame.draw.line(screen, (50, 50, 50), (cx+l,cy), (cx+l,cy+l), 2)
+            if walls[0]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx+l,cy), 5)
+            if walls[1]: pygame.draw.line(screen, (50, 50, 50), (cx,cy+l), (cx+l,cy+l), 5)
+            if walls[2]: pygame.draw.line(screen, (50, 50, 50), (cx,cy), (cx,cy+l), 5)
+            if walls[3]: pygame.draw.line(screen, (50, 50, 50), (cx+l,cy), (cx+l,cy+l), 5)
 
 
     # Main Game Loop
@@ -90,10 +96,10 @@ def start(maze, path):
             y += dy
             last_mouse_pos = (mx, my)
 
-        screen.fill((255,255,255))
+        screen.fill((150,150,150))
 
         #rysujemy maze
-        utility.draw_maze(screen, maze, zoom, CELL_SIZE, x, y)
+        draw_maze(maze, zoom, CELL_SIZE)
 
         #rysowanie maze krok po kroku
 
@@ -103,8 +109,8 @@ def start(maze, path):
     sys.exit()
 
 if __name__ == "__main__":
-    n, m = 8, 8
+    n, m = 32, 32
     maze, path = hak.generate_maze(n, m)
     maze = mg.converter.maze_convert(maze)
-    start(maze, path)
+    start(maze, path, n, m)
 
