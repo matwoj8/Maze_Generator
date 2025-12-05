@@ -7,22 +7,22 @@ import maze_generators.mazes.Binary_Tree_Maze as bt
 import maze_generators.converter as ct
 import maze_generators as mg
 
-def start(maze, path):
+def start(maze, path, n, m):
     pygame.init()
 
+    CELL_SIZE = 60
+
     # FULLSCREEN
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((n*CELL_SIZE+100, m*CELL_SIZE+100))
     WIDTH, HEIGHT = screen.get_size()
     pygame.display.set_caption("Maze Generator")
 
     # Zegar bierzemy, żeby kontrolować framerate, ale na razie nie używam
     # clock = pygame.time.Clock()
 
-    CELL_SIZE = 60
-
     #rzeczy do kamery
     last_mouse_pos = pygame.mouse.get_pos()
-    x, y = 200, 200
+    x, y = 50, 50
     dragging = False
     zoom = 1
 
@@ -88,7 +88,7 @@ def start(maze, path):
     sys.exit()
 
 if __name__ == "__main__":
-    n, m = 8, 8
+    n, m = 12, 10
     maze, path = hak.generate_maze(n, m)
     maze = mg.converter.maze_convert(maze)
-    start(maze, path)
+    start(maze, path, n, m)

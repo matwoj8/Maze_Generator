@@ -109,7 +109,7 @@ def start(maze, path, n, m):
     sys.exit()
 
 if __name__ == "__main__":
-    n, m = 32, 32
+    n, m = 12, 12
     maze, path = hak.generate_maze(n, m)
     maze = mg.converter.maze_convert(maze)
     start(maze, path, n, m)
