@@ -5,8 +5,9 @@ from maze_generators.converter import *
 
 def generate_maze(m: int, n: int) -> (dict, list):
     maze = Maze(m, n)
-    position= (randint(0 , m),randint(0 , n))
-    maze.board[(0, 0)].visited = True
+    #position= (0,0)
+    position = (randint(0, m-1), randint(0, n-1)) #rand int zwraca a do b włącznie wiec -1
+    maze.board[position].visited = True
     mode = 0
     cnt = 1
 

@@ -8,6 +8,7 @@ import maze_generators.converter as ct
 import maze_generators as mg
 import Player.character as character
 import text
+import temporary
 
 def start(CELL_SIZE: int) -> None:
     pygame.init()
@@ -17,8 +18,7 @@ def start(CELL_SIZE: int) -> None:
     pygame.display.set_caption("Maze Generator")
 
     last_mouse_pos = pygame.mouse.get_pos()
-    x, y = 100, 50
-    sx, sy = 0, 0
+    x, y = 50, 50
     dragging = False
     zoom = 1
 
@@ -154,7 +154,7 @@ def start(CELL_SIZE: int) -> None:
             utility.write_text(screen, binary_tree_description, WIDTH * 0.3, HEIGHT * 0.6, font = font, color = (128,128,255))
 
             if steps_generated is False:
-                maze, path = bt.generate_maze(30, 20)
+                maze, path = bt.generate_maze(5, 5)
                 maze = ct.maze_convert(maze)
                 steps_generated = True
                 i = 0
@@ -197,7 +197,7 @@ def start(CELL_SIZE: int) -> None:
             utility.write_text(screen, hunt_and_kill_description, WIDTH * 0.3, HEIGHT * 0.6, font=font, color=(128, 128, 255))
 
             if steps_generated is False:
-                maze, path = hak.generate_maze(30, 20)
+                maze, path = hak.generate_maze(5, 5)
                 maze = ct.maze_convert(maze)
                 steps_generated = True
                 i = 0
@@ -225,18 +225,29 @@ def start(CELL_SIZE: int) -> None:
 
         elif game_state == "game":
 
+            if not generated:
+                maze, path = hak.generate_maze(20, 5)
+                cell_maze = temporary.convert_to_cells(maze, x, y)
+                sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
+                maze = ct.maze_convert(maze)
+                player = character.Character(sx, sy, chosen_character)
+                cell_maze[0].characters = player
+                player.cell = cell_maze[0]
+                generated = True
+
             keys = pygame.key.get_pressed()
 
             speed = 3
 
             if keys[pygame.K_a]:
-                sx -= speed
+                player.move(screen, -speed, 0)
             if keys[pygame.K_d]:
-                sx += speed
+                player.move(screen, speed, 0)
             if keys[pygame.K_w]:
-                sy -= speed
+                player.move(screen, 0, -speed)
             if keys[pygame.K_s]:
-                sy += speed
+                #print((player.x, player.y), (player.cell.xpos, player.cell.ypos), (player.cell.xpos+CELL_SIZE, player.cell.ypos+CELL_SIZE))
+                player.move(screen, 0, speed)
 
             if dragging:
                 mx, my = pygame.mouse.get_pos()
@@ -245,14 +256,9 @@ def start(CELL_SIZE: int) -> None:
                 x += dx
                 y += dy
                 last_mouse_pos = (mx, my)
-            if not generated:
-                player = character.Character(sx, sy, chosen_character)
-                maze, path = hak.generate_maze(50, 50)
-                maze = ct.maze_convert(maze)
-                generated = True
 
-            utility.draw_maze(screen, maze, zoom, CELL_SIZE, x, y)
-            player.update(screen, sx, sy)
+            temporary.draw_maze(screen, cell_maze, zoom, CELL_SIZE, x, y)
+            player.draw(screen)
 
         pygame.display.flip()
 
