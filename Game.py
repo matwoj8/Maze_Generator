@@ -1,6 +1,9 @@
 import time
 import pygame
 import sys
+
+from pygame.examples.moveit import HEIGHT
+
 import Visuals.utility_functions as utility
 import maze_generators.mazes.Hunt_And_Kill_Maze as hak
 import maze_generators.mazes.Binary_Tree_Maze as bt
@@ -234,7 +237,7 @@ def start(CELL_SIZE: int) -> None:
 
             keys = pygame.key.get_pressed()
 
-            speed = 10
+            speed = 3
 
             if keys[pygame.K_a]:
                 player.move(screen, -speed, 0)
@@ -243,8 +246,18 @@ def start(CELL_SIZE: int) -> None:
             if keys[pygame.K_w]:
                 player.move(screen, 0, -speed)
             if keys[pygame.K_s]:
-                #print((player.x, player.y), (player.cell.xpos, player.cell.ypos), (player.cell.xpos+CELL_SIZE, player.cell.ypos+CELL_SIZE))
                 player.move(screen, 0, speed)
+            if keys[pygame.K_SPACE]:
+                # mehcanika w zasadzie identyczna do draggingu tylko przesuwa na środek
+                dx = (0.5 * WIDTH) - player.x
+                dy = (0.5 * HEIGHT) - player.y
+
+                player.x += dx
+                player.y += dy
+
+                for cell in cell_maze:
+                    cell.xpos += dx
+                    cell.ypos += dy
 
             #przesuwanie maze teraz działą
             if dragging:
