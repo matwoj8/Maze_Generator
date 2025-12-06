@@ -8,7 +8,6 @@ import maze_generators.converter as ct
 import maze_generators as mg
 import Player.character as character
 import text
-import temporary
 
 def start(CELL_SIZE: int) -> None:
     pygame.init()
@@ -155,13 +154,12 @@ def start(CELL_SIZE: int) -> None:
 
             if steps_generated is False:
                 maze, path = bt.generate_maze(5, 5)
-                maze = ct.maze_convert(maze)
+                cell_maze = ct.convert_to_cells(maze, x, y)
                 steps_generated = True
                 i = 0
 
-            cur = path[i]
-            visited.append(cur)
-            utility.draw_visited(screen, maze, zoom, 30, cur, visited, WIDTH * 0.4, HEIGHT * 0.1)
+            visited.append(cell_maze[path[i]])
+            utility.draw_maze_cells_steps(screen, zoom, 60, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
 
             pygame.display.flip()
             time.sleep(0.1)
@@ -198,13 +196,12 @@ def start(CELL_SIZE: int) -> None:
 
             if steps_generated is False:
                 maze, path = hak.generate_maze(5, 5)
-                maze = ct.maze_convert(maze)
+                cell_maze = ct.convert_to_cells(maze, x, y)
                 steps_generated = True
                 i = 0
 
-            cur = path[i]
-            visited.append(cur)
-            utility.draw_visited(screen, maze, zoom, 30, cur, visited, WIDTH * 0.4, HEIGHT * 0.1)
+            visited.append(cell_maze[path[i]])
+            utility.draw_maze_cells_steps(screen, zoom, 60, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
 
             pygame.display.flip()
             time.sleep(0.1)
@@ -226,18 +223,18 @@ def start(CELL_SIZE: int) -> None:
         elif game_state == "game":
 
             if not generated:
-                maze, path = hak.generate_maze(20, 5)
-                cell_maze = temporary.convert_to_cells(maze, x, y)
+                maze, path = hak.generate_maze(50, 50)
+                cell_maze = list(ct.convert_to_cells(maze, x, y).values())
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
-                maze = ct.maze_convert(maze)
                 player = character.Character(sx, sy, chosen_character)
                 cell_maze[0].characters = player
                 player.cell = cell_maze[0]
+                #print(cell_maze)
                 generated = True
 
             keys = pygame.key.get_pressed()
 
-            speed = 3
+            speed = 10
 
             if keys[pygame.K_a]:
                 player.move(screen, -speed, 0)
@@ -249,15 +246,23 @@ def start(CELL_SIZE: int) -> None:
                 #print((player.x, player.y), (player.cell.xpos, player.cell.ypos), (player.cell.xpos+CELL_SIZE, player.cell.ypos+CELL_SIZE))
                 player.move(screen, 0, speed)
 
+            #przesuwanie maze teraz działą
             if dragging:
                 mx, my = pygame.mouse.get_pos()
                 dx = mx - last_mouse_pos[0]
                 dy = my - last_mouse_pos[1]
-                x += dx
-                y += dy
+                #x += dx
+                #y += dy
                 last_mouse_pos = (mx, my)
 
-            temporary.draw_maze(screen, cell_maze, zoom, CELL_SIZE, x, y)
+                player.x += dx
+                player.y += dy
+
+                for cell in cell_maze:
+                    cell.xpos += dx
+                    cell.ypos += dy
+
+            utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
             player.draw(screen)
 
         pygame.display.flip()
