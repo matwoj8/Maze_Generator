@@ -99,3 +99,27 @@ def maze_dfs_traversal(maze: dict, start: tuple[int, int]) -> list[tuple[int, in
 
     dfs(start)
     return path
+
+def draw_maze_cells(screen, cell_maze: dict, zoom: float, CELL_SIZE: int = 60, x=0, y=0) -> None:
+    for cell in cell_maze:
+        cx, cy = cell.xpos+x, cell.ypos+y
+
+        l = CELL_SIZE
+
+        pygame.draw.rect(screen, (180, 130, 200),
+                         (cx, cy, l, l))
+
+        if not cell.up: pygame.draw.line(screen, (50, 50, 50), (cx, cy), (cx + l, cy), 4)
+        if not cell.down: pygame.draw.line(screen, (50, 50, 50), (cx, cy + l), (cx + l, cy + l), 4)
+        if not cell.left: pygame.draw.line(screen, (50, 50, 50), (cx, cy), (cx, cy + l), 4)
+        if not cell.right: pygame.draw.line(screen, (50, 50, 50), (cx + l, cy), (cx + l, cy + l), 4)
+
+def draw_maze_cells_steps(screen, zoom, CELL_SIZE, current, visited, x=0, y=0) -> None:
+    # z jakiegos powodu to sie nie rowno rysuje bez odjecia 8 nie wiem pojecia gdzie ono jest dodane
+    pygame.draw.rect(screen, (40, 20, 60),
+                     (x+CELL_SIZE-8, y+CELL_SIZE-8, current.n*CELL_SIZE, current.m*CELL_SIZE))
+
+    draw_maze_cells(screen, visited, 1, CELL_SIZE, x, y)
+
+    pygame.draw.rect(screen, (0, 255, 0),
+                     (current.xpos + x + 2, current.ypos + y + 2, CELL_SIZE - 2, CELL_SIZE - 2))
