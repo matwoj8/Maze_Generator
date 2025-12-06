@@ -237,7 +237,7 @@ def start(CELL_SIZE: int) -> None:
 
             keys = pygame.key.get_pressed()
 
-            speed = 3
+            speed = 10
 
             if keys[pygame.K_a]:
                 player.move(screen, -speed, 0)
