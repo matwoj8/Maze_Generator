@@ -4,8 +4,9 @@ import maze_generators.mazes.Trivial_Maze as tr
 
 
 def generate_maze(m: int, n: int, k: int) -> dict:
-    maze = tr.generate_maze(m, n)
+    maze, path = tr.generate_maze(m, n)
     position = (0, 0)
+    path.append(position)
 
     for i in range(k):
         options = find_all_existing_neighbours(maze.board[position])
@@ -13,10 +14,11 @@ def generate_maze(m: int, n: int, k: int) -> dict:
         new_position, direction = choice(options)
         actualize_neighbour(maze.board[position], direction)
         position = new_position
+        path.append(position)
 
         options = find_all_neighbours(maze.board[position])
         if options == []: break
         direction = choice(options)
         actualize_not_neighbour(maze.board[position], direction)
 
-    return maze
+    return maze, path

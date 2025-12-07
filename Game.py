@@ -4,6 +4,7 @@ import sys
 import Visuals.utility_functions as utility
 import maze_generators.mazes.Hunt_And_Kill_Maze as hak
 import maze_generators.mazes.Binary_Tree_Maze as bt
+import maze_generators.mazes.Origin_Shift_Maze as os
 import maze_generators.converter as ct
 import maze_generators as mg
 import Player.character as character
@@ -218,6 +219,23 @@ def start(CELL_SIZE: int) -> None:
             if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_hunt_and_kill"
             if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05,  font=font): game_state = "extras_maze_generators_origin_shift"
             if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_cos"
+
+            if steps_generated is False:
+                maze, path = os.generate_maze(5, 5, 100)
+                cell_maze = ct.convert_to_cells(maze, x, y)
+                steps_generated = True
+                i = 0
+
+            visited.append(cell_maze[path[i]])
+            utility.draw_maze_cells_steps(screen, zoom, 60, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
+
+            pygame.display.flip()
+            time.sleep(0.1)
+            i += 1
+            if i >= len(path):
+                i = 0
+                visited = []
+                time.sleep(1)
 
 
         elif game_state == "game":
