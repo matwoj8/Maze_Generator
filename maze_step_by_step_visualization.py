@@ -89,7 +89,7 @@ def start(maze, path, n, m):
     sys.exit()
 
 if __name__ == "__main__":
-    n, m = 6, 6
+    n, m = 12, 12
     maze, path = os.generate_maze(n, m, 100)
     maze = mg.converter.maze_convert(maze)
     start(maze, path, n, m)
