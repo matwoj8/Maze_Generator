@@ -22,12 +22,12 @@ def maze_convert(maze):
         new_maze[pos] = list(new_maze[pos])
     return new_maze
 
-def convert_to_cells(maze, x, y):
+def convert_to_cells(maze, CELL_SIZE, x, y):
     new_maze_dict = {}
 
     for pos, node in maze.board.items():
         i, j = int(pos[0]), int(pos[1])
-        new_cell = Cell(node, 60, x, y)
+        new_cell = Cell(node, CELL_SIZE, x, y)
         new_maze_dict[(i, j)] = new_cell
 
     for (i, j), cell in new_maze_dict.items():
@@ -39,12 +39,12 @@ def convert_to_cells(maze, x, y):
     return new_maze_dict
 
 # konwerter celli wymuszajacy dwustronność
-def convert_to_cells_twosides(maze, x, y):
+def convert_to_cells_twosides(maze, CELL_SIZE,x, y):
     new_maze_dict = {}
 
     for pos, node in maze.board.items():
         i, j = int(pos[0]), int(pos[1])
-        new_cell = Cell(node, 60, x, y)
+        new_cell = Cell(node, CELL_SIZE, x, y)
         new_maze_dict[(i, j)] = new_cell
 
     for (i, j), cell in new_maze_dict.items():
