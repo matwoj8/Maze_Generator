@@ -303,11 +303,12 @@ def start(CELL_SIZE: int) -> None:
             utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
             player.draw(screen)
 
-            for z in zombies:
-                current_time = pygame.time.get_ticks()
-                if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
+            current_time = pygame.time.get_ticks()
+            if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
+                for z in zombies:
                     z.random_walk(z, cell_maze, screen)
-                    last_moven_time = current_time
+                last_move_time = current_time
+            for z in zombies:
                 z.draw(screen)
 
         pygame.display.flip()
