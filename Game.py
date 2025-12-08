@@ -1,6 +1,11 @@
 import time
+from queue import PriorityQueue
+
 import pygame
 import sys
+
+from pygame.examples.moveit import HEIGHT
+
 import Visuals.utility_functions as utility
 import maze_generators.mazes.Hunt_And_Kill_Maze as hak
 import maze_generators.mazes.Binary_Tree_Maze as bt
@@ -300,6 +305,18 @@ def start(CELL_SIZE: int) -> None:
             elif keys[pygame.K_s]:
                 player.direction = 6
                 player.direction_move(screen, player.direction, speed)
+
+            if keys[pygame.K_SPACE]:
+                # mehcanika w zasadzie identyczna do draggingu tylko przesuwa na środek
+                dx = (0.5 * WIDTH) - player.x
+                dy = (0.5 * HEIGHT) - player.y
+
+                player.x += dx
+                player.y += dy
+
+                for cell in cell_maze:
+                    cell.xpos += dx
+                    cell.ypos += dy
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if chosen_character == "warrior":
