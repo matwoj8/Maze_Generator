@@ -43,9 +43,14 @@ def start(CELL_SIZE: int) -> None:
 
     chosen_character = ""
 
+    #zombies
     last_spawn_time = 0
     SPAWN_INTERVAL = 200
     zombies = []
+    last_move_time = 0
+    ZOMBIE_MOVE_INTERVAL = 60
+    ZOMBIES_LIMIT = 50
+
 
     #odczytywanie plikow tekstowych
     with open("text/binary_tree", "r", encoding="utf-8") as f:
@@ -256,7 +261,7 @@ def start(CELL_SIZE: int) -> None:
                 generated = True
 
             current_time = pygame.time.get_ticks()
-            if current_time - last_spawn_time >= SPAWN_INTERVAL:
+            if len(zombies) < ZOMBIES_LIMIT and current_time - last_spawn_time >= SPAWN_INTERVAL:
                 zom.spawn_random_zombie(player, cell_maze, zombies)
                 last_spawn_time = current_time
 
@@ -297,7 +302,12 @@ def start(CELL_SIZE: int) -> None:
 
             utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
             player.draw(screen)
+
             for z in zombies:
+                current_time = pygame.time.get_ticks()
+                if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
+                    z.random_walk(z, cell_maze, screen)
+                    last_moven_time = current_time
                 z.draw(screen)
 
         pygame.display.flip()
