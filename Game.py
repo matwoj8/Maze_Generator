@@ -1,6 +1,11 @@
 import time
+from queue import PriorityQueue
+
 import pygame
 import sys
+
+from pygame.examples.moveit import HEIGHT
+
 import Visuals.utility_functions as utility
 import maze_generators.mazes.Hunt_And_Kill_Maze as hak
 import maze_generators.mazes.Binary_Tree_Maze as bt
@@ -217,7 +222,6 @@ def start(CELL_SIZE: int) -> None:
                 visited = []
                 time.sleep(1)
 
-
         elif game_state == "extras_maze_generators_origin_shift":
             if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font): game_state = "extras"
             if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_binary_tree"
@@ -228,6 +232,7 @@ def start(CELL_SIZE: int) -> None:
             if steps_generated is False:
                 maze, path = os.generate_maze(5, 5, 100)
                 cell_maze = ct.convert_to_cells(maze, x, y)
+                #cell_maze = ct.convert_to_cells_twosides(maze, x, y)
                 steps_generated = True
                 i = 0
 
@@ -272,8 +277,18 @@ def start(CELL_SIZE: int) -> None:
             if keys[pygame.K_w]:
                 player.move(screen, 0, -speed)
             if keys[pygame.K_s]:
-                #print((player.x, player.y), (player.cell.xpos, player.cell.ypos), (player.cell.xpos+CELL_SIZE, player.cell.ypos+CELL_SIZE))
                 player.move(screen, 0, speed)
+            if keys[pygame.K_SPACE]:
+                # mehcanika w zasadzie identyczna do draggingu tylko przesuwa na środek
+                dx = (0.5 * WIDTH) - player.x
+                dy = (0.5 * HEIGHT) - player.y
+
+                player.x += dx
+                player.y += dy
+
+                for cell in cell_maze:
+                    cell.xpos += dx
+                    cell.ypos += dy
 
             #przesuwanie maze teraz działą
             if dragging:
