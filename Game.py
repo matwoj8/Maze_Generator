@@ -9,6 +9,7 @@ import maze_generators.converter as ct
 import maze_generators as mg
 import Objects.character as character
 import Objects.zombie as zom
+import Objects.warrior as warrior
 import text
 
 def start(CELL_SIZE: int) -> None:
@@ -254,7 +255,8 @@ def start(CELL_SIZE: int) -> None:
                 maze, path = hak.generate_maze(50, 50)
                 cell_maze = list(ct.convert_to_cells(maze, x, y).values())
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
-                player = character.Character(sx, sy, chosen_character)
+                if chosen_character == 'warrior': player = warrior.Warrior(sx, sy)
+                else: player = character.Character(sx, sy, chosen_character)
                 cell_maze[0].characters.append(player)
                 player.cell = cell_maze[0]
                 #print(cell_maze)
@@ -270,15 +272,38 @@ def start(CELL_SIZE: int) -> None:
 
             speed = 10
 
+            utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
+
             if keys[pygame.K_a]:
-                player.move(screen, -speed, 0)
-            if keys[pygame.K_d]:
-                player.move(screen, speed, 0)
-            if keys[pygame.K_w]:
-                player.move(screen, 0, -speed)
-            if keys[pygame.K_s]:
-                #print((player.x, player.y), (player.cell.xpos, player.cell.ypos), (player.cell.xpos+CELL_SIZE, player.cell.ypos+CELL_SIZE))
-                player.move(screen, 0, speed)
+                if keys[pygame.K_w]:
+                    player.direction = 1
+                elif keys[pygame.K_s]:
+                    player.direction = 7
+                else:
+                    player.direction = 0
+                player.direction_move(screen, player.direction, speed)
+
+            elif keys[pygame.K_w]:
+                if keys[pygame.K_d]:
+                    player.direction = 3
+                else:
+                    player.direction = 2
+                player.direction_move(screen, player.direction, speed)
+
+            elif keys[pygame.K_d]:
+                if keys[pygame.K_s]:
+                    player.direction = 5
+                else:
+                    player.direction = 4
+                player.direction_move(screen, player.direction, speed)
+
+            elif keys[pygame.K_s]:
+                player.direction = 6
+                player.direction_move(screen, player.direction, speed)
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if chosen_character == "warrior":
+                    player.attack()
 
             #przesuwanie maze teraz działą
             if dragging:
@@ -300,8 +325,8 @@ def start(CELL_SIZE: int) -> None:
                     cell.xpos += dx
                     cell.ypos += dy
 
-            utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
             player.draw(screen)
+            player.draw_sword(screen)
 
             current_time = pygame.time.get_ticks()
             if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:

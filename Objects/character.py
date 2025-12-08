@@ -56,21 +56,21 @@ class Character(object):
             if self.y >= self.cell.ypos + self.cell.size and self.cell.down_cell and self.cell.down:
                 self.cell = self.cell.down_cell
 
-    def direction_move(self, screen, direction, character, speed):
+    def direction_move(self, screen, direction, speed):
         match direction:
             case 0:
-                character.move(screen, -speed, 0)
+                self.move(screen, -speed, 0)
             case 1:
-                character.move(screen, -speed, speed)
+                self.move(screen, -speed, -speed)
             case 2:
-                character.move(screen, 0, speed)
+                self.move(screen, 0, -speed)
             case 3:
-                character.move(screen, speed, speed)
+                self.move(screen, speed, -speed)
             case 4:
-                character.move(screen, speed, 0)
+                self.move(screen, speed, 0)
             case 5:
-                character.move(screen, speed, -speed)
+                self.move(screen, speed, speed)
             case 6:
-                character.move(screen, 0, -speed)
+                self.move(screen, 0, speed)
             case 7:
-                character.move(screen, -speed, -speed)
+                self.move(screen, -speed, speed)

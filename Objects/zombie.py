@@ -10,7 +10,7 @@ class Zombie(Character):
         self.direction = random.randint(0, 7)
 
     def random_walk(self, z, cell_maze, screen):
-        z.direction_move(screen, self.direction, z, self.speed)
+        z.direction_move(screen, self.direction, self.speed)
         self.direction = random.choice([(self.direction - 1) % 8, self.direction,  (self.direction + 1) % 8])
 
 
@@ -28,7 +28,6 @@ def spawn_random_zombie(player, cell_maze, zombies):
     chosen = random.choice(valid_cells)
     zx = chosen.xpos + chosen.size // 2
     zy = chosen.ypos + chosen.size // 2
-    print(zx, zy ,player.x, player.y)
 
     zombie = Zombie(zx, zy)
     zombie.cell = chosen
