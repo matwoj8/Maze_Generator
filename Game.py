@@ -239,6 +239,7 @@ def start(CELL_SIZE: int) -> None:
             if steps_generated is False:
                 maze, path = os.generate_maze(5, 5, 100)
                 cell_maze = ct.convert_to_cells(maze, x, y)
+                # cell_maze = ct.convert_to_cells_twosides(maze, x, y)
                 steps_generated = True
                 i = 0
 
