@@ -17,7 +17,7 @@ import Objects.zombie as zom
 import Objects.warrior as warrior
 import text
 
-def start(CELL_SIZE: int) -> None:
+def start(CELL_SIZE: int, m:int, n:int) -> None:
     pygame.init()
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -171,7 +171,7 @@ def start(CELL_SIZE: int) -> None:
 
             if steps_generated is False:
                 maze, path = bt.generate_maze(5, 5)
-                cell_maze = ct.convert_to_cells(maze, x, y)
+                cell_maze = ct.convert_to_cells(maze,CELL_SIZE, x, y)
                 steps_generated = True
                 i = 0
 
@@ -213,7 +213,7 @@ def start(CELL_SIZE: int) -> None:
 
             if steps_generated is False:
                 maze, path = hak.generate_maze(5, 5)
-                cell_maze = ct.convert_to_cells(maze, x, y)
+                cell_maze = ct.convert_to_cells(maze,CELL_SIZE, x, y)
                 steps_generated = True
                 i = 0
 
@@ -238,7 +238,7 @@ def start(CELL_SIZE: int) -> None:
 
             if steps_generated is False:
                 maze, path = os.generate_maze(5, 5, 100)
-                cell_maze = ct.convert_to_cells(maze, x, y)
+                cell_maze = ct.convert_to_cells(maze, CELL_SIZE, x, y)
                 # cell_maze = ct.convert_to_cells_twosides(maze, x, y)
                 steps_generated = True
                 i = 0
@@ -258,8 +258,8 @@ def start(CELL_SIZE: int) -> None:
         elif game_state == "game":
 
             if not generated:
-                maze, path = hak.generate_maze(50, 50)
-                cell_maze = list(ct.convert_to_cells(maze, x, y).values())
+                maze, path = hak.generate_maze(m, n)
+                cell_maze = list(ct.convert_to_cells(maze, CELL_SIZE, x, y).values())
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
                 if chosen_character == 'warrior': player = warrior.Warrior(sx, sy)
                 else: player = character.Character(sx, sy, chosen_character)
@@ -349,7 +349,7 @@ def start(CELL_SIZE: int) -> None:
             current_time = pygame.time.get_ticks()
             if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
                 for z in zombies:
-                    z.random_walk(z, cell_maze, screen)
+                    z.random_walk(screen, player)
                 last_move_time = current_time
             for z in zombies:
                 z.draw(screen)
@@ -362,4 +362,4 @@ def start(CELL_SIZE: int) -> None:
 
 
 if __name__ == "__main__":
-    start(60)
+    start(500, 8, 8)
