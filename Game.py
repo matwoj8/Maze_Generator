@@ -7,7 +7,8 @@ import maze_generators.mazes.Binary_Tree_Maze as bt
 import maze_generators.mazes.Origin_Shift_Maze as os
 import maze_generators.converter as ct
 import maze_generators as mg
-import Player.character as character
+import Objects.character as character
+import Objects.zombie as zom
 import text
 
 def start(CELL_SIZE: int) -> None:
@@ -41,6 +42,10 @@ def start(CELL_SIZE: int) -> None:
     game_state = "menu" # zaczynamy w menu
 
     chosen_character = ""
+
+    last_spawn_time = 0
+    SPAWN_INTERVAL = 200
+    zombies = []
 
     #odczytywanie plikow tekstowych
     with open("text/binary_tree", "r", encoding="utf-8") as f:
@@ -245,10 +250,16 @@ def start(CELL_SIZE: int) -> None:
                 cell_maze = list(ct.convert_to_cells(maze, x, y).values())
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
                 player = character.Character(sx, sy, chosen_character)
-                cell_maze[0].characters = player
+                cell_maze[0].characters.append(player)
                 player.cell = cell_maze[0]
                 #print(cell_maze)
                 generated = True
+
+            current_time = pygame.time.get_ticks()
+            if current_time - last_spawn_time >= SPAWN_INTERVAL:
+                zom.spawn_random_zombie(player, cell_maze, zombies)
+                last_spawn_time = current_time
+
 
             keys = pygame.key.get_pressed()
 
@@ -276,12 +287,18 @@ def start(CELL_SIZE: int) -> None:
                 player.x += dx
                 player.y += dy
 
+                for z in zombies:
+                    z.x += dx
+                    z.y += dy
+
                 for cell in cell_maze:
                     cell.xpos += dx
                     cell.ypos += dy
 
             utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
             player.draw(screen)
+            for z in zombies:
+                z.draw(screen)
 
         pygame.display.flip()
 
