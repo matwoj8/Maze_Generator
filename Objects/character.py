@@ -16,6 +16,8 @@ class Character(object):
         self.name = name
         self.color = self.color_selection[name]
         self.cell = None
+        self.direction = None
+        self.speed = None
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (self.x, self.y), 10)
@@ -53,3 +55,22 @@ class Character(object):
             self.update(screen, self.x, y_arg)
             if self.y >= self.cell.ypos + self.cell.size and self.cell.down_cell and self.cell.down:
                 self.cell = self.cell.down_cell
+
+    def direction_move(self, screen, direction, speed):
+        match direction:
+            case 0:
+                self.move(screen, -speed, 0)
+            case 1:
+                self.move(screen, -speed, -speed)
+            case 2:
+                self.move(screen, 0, -speed)
+            case 3:
+                self.move(screen, speed, -speed)
+            case 4:
+                self.move(screen, speed, 0)
+            case 5:
+                self.move(screen, speed, speed)
+            case 6:
+                self.move(screen, 0, speed)
+            case 7:
+                self.move(screen, -speed, speed)
