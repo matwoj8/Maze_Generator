@@ -55,7 +55,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     zombies = []
     last_move_time = 0
     ZOMBIE_MOVE_INTERVAL = 60
-    ZOMBIES_LIMIT = 50
+    ZOMBIES_LIMIT = 10
 
 
     #odczytywanie plikow tekstowych
@@ -281,7 +281,6 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
             dy = 0
             speed = 10
 
-            # Wyliczamy wektor ruchu
             if keys[pygame.K_a]:
                 dx -= speed
             if keys[pygame.K_d]:
@@ -363,4 +362,4 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
 
 
 if __name__ == "__main__":
-    start(60, 500, 8, 8)
+    start(60, 500, 3, 3)
