@@ -55,7 +55,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     zombies = []
     last_move_time = 0
     ZOMBIE_MOVE_INTERVAL = 60
-    ZOMBIES_LIMIT = 50
+    ZOMBIES_LIMIT = 10
 
 
     #odczytywanie plikow tekstowych
@@ -273,39 +273,35 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 zom.spawn_random_zombie(player, cell_maze, zombies)
                 last_spawn_time = current_time
 
-
             keys = pygame.key.get_pressed()
-
-            speed = 10
 
             utility.draw_maze_cells(screen, cell_maze, zoom, CELL_SIZE)
 
+            dx = 0
+            dy = 0
+            speed = 10
+
             if keys[pygame.K_a]:
-                if keys[pygame.K_w]:
-                    player.direction = 1
-                elif keys[pygame.K_s]:
-                    player.direction = 7
-                else:
-                    player.direction = 0
-                player.direction_move(screen, player.direction, speed)
+                dx -= speed
+            if keys[pygame.K_d]:
+                dx += speed
+            if keys[pygame.K_w]:
+                dy -= speed
+            if keys[pygame.K_s]:
+                dy += speed
 
-            elif keys[pygame.K_w]:
-                if keys[pygame.K_d]:
-                    player.direction = 3
-                else:
-                    player.direction = 2
-                player.direction_move(screen, player.direction, speed)
+            if dx < 0 and dy < 0: player.direction = 1
+            elif dx > 0 and dy < 0: player.direction = 3
+            elif dx > 0 and dy > 0: player.direction = 5
+            elif dx < 0 and dy > 0: player.direction = 7
+            elif dx < 0: player.direction = 0
+            elif dx > 0: player.direction = 4
+            elif dy < 0: player.direction = 2
+            elif dy > 0: player.direction = 6
+            else: player.direction = None
 
-            elif keys[pygame.K_d]:
-                if keys[pygame.K_s]:
-                    player.direction = 5
-                else:
-                    player.direction = 4
-                player.direction_move(screen, player.direction, speed)
-
-            elif keys[pygame.K_s]:
-                player.direction = 6
-                player.direction_move(screen, player.direction, speed)
+            if dx != 0 or dy != 0:
+                player.move(screen, dx, dy)
 
             if keys[pygame.K_SPACE]:
                 # mehcanika w zasadzie identyczna do draggingu tylko przesuwa na środek
@@ -366,4 +362,4 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
 
 
 if __name__ == "__main__":
-    start(60, 500, 8, 8)
+    start(60, 500, 3, 3)

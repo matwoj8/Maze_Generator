@@ -4,16 +4,29 @@ import math
 
 
 class Warrior(Character):
+
+
     def __init__(self, x, y):
         super().__init__(x, y, name='warrior')
         self.is_attacking = False
         self.attack_cooldown = 1000
         self.last_attack_time = 0
         self.attack_duration = 250
-        self.sword_length = 30
+        self.sword_length = 70
         self.sword_width = 5
         self.direction = 0
         self.attack_direction = 0
+        self.images = {
+            0: pygame.image.load("./Graphics/player/warrior/left.png"),
+            1: pygame.image.load("./Graphics/player/warrior/left_up.png"),
+            2: pygame.image.load("./Graphics/player/warrior/up.png"),
+            3: pygame.image.load("./Graphics/player/warrior/right_up.png"),
+            4: pygame.image.load("./Graphics/player/warrior/right.png"),
+            5: pygame.image.load("./Graphics/player/warrior/right_down.png"),
+            6: pygame.image.load("./Graphics/player/warrior/down.png"),
+            7: pygame.image.load("./Graphics/player/warrior/left_down.png"),
+            "default": pygame.image.load("./Graphics/player/warrior/default.png")
+        }
 
     def attack(self):
         current = pygame.time.get_ticks()
@@ -26,6 +39,13 @@ class Warrior(Character):
 
         self.last_attack_time = current
         self.is_attacking = True
+
+    def draw(self, screen):
+        image = self.images.get(self.direction, self.images.get("default"))
+
+        rect = image.get_rect(center=(self.x, self.y))
+
+        screen.blit(image, rect)
 
     def draw_sword(self, screen):
         if not self.is_attacking:
@@ -51,5 +71,33 @@ class Warrior(Character):
         pygame.draw.line(screen, (180, 180, 180), (int(grip_x), int(grip_y)), (int(tip_x), int(tip_y)), self.sword_width)
         #pygame.draw.circle(screen, (0, 0, 0), (int(grip_x), int(grip_y)), 3) To jest rekojesc to debugowania, moze kiedy tez sie przyda
 
+        # logika uderzania jako taka
+        points = []
+        for i in range(10):
+            t = i / (10 - 1)  # 0 → 1
+            x = int(grip_x + (tip_x - grip_x) * t)
+            y = int(grip_y + (tip_y - grip_y) * t)
+            points.append((x, y))
 
+        possible_targets = self.cell.characters
+        if self.cell.right_cell is not None and self.cell.right: possible_targets.extend(self.cell.right_cell.characters)
+        if self.cell.left_cell is not None and self.cell.left: possible_targets.extend(self.cell.left_cell.characters)
+        if self.cell.up_cell is not None and self.cell.up: possible_targets.extend(self.cell.up_cell.characters)
+        if self.cell.down_cell is not None and self.cell.down: possible_targets.extend(self.cell.down_cell.characters)
+        possible_targets = set(possible_targets)
+        possible_targets = list(possible_targets)
+
+        # do debugowania
+        # for char in possible_targets:
+        #     print(char.id, end = " ")
+        # print()
+
+        for character in possible_targets:
+            #print("character has been hit", character.name)
+            if character != self:
+                for a, b in points:
+                    #print("character has been hit", character.name)
+                    if character.x <= a <= character.x + character.hitbox[2] and character.y <= b <= character.y + character.hitbox[2]:
+                        #print("character has been hit", character.name)
+                        character.knockback(screen, grip_x, grip_y, 200)
 
