@@ -17,7 +17,7 @@ import Objects.zombie as zom
 import Objects.warrior as warrior
 import text
 
-def start(CELL_SIZE: int, m:int, n:int) -> None:
+def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     pygame.init()
 
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -171,7 +171,7 @@ def start(CELL_SIZE: int, m:int, n:int) -> None:
 
             if steps_generated is False:
                 maze, path = bt.generate_maze(5, 5)
-                cell_maze = ct.convert_to_cells(maze,CELL_SIZE, x, y)
+                cell_maze = ct.convert_to_cells(maze,CELL_SIZE_STEP, x, y)
                 steps_generated = True
                 i = 0
 
@@ -213,7 +213,7 @@ def start(CELL_SIZE: int, m:int, n:int) -> None:
 
             if steps_generated is False:
                 maze, path = hak.generate_maze(5, 5)
-                cell_maze = ct.convert_to_cells(maze,CELL_SIZE, x, y)
+                cell_maze = ct.convert_to_cells(maze,CELL_SIZE_STEP, x, y)
                 steps_generated = True
                 i = 0
 
@@ -244,7 +244,7 @@ def start(CELL_SIZE: int, m:int, n:int) -> None:
                 i = 0
 
             visited.append(cell_maze[path[i]])
-            utility.draw_maze_cells_steps(screen, zoom, 60, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
+            utility.draw_maze_cells_steps(screen, zoom, CELL_SIZE_STEP, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
 
             pygame.display.flip()
             time.sleep(0.1)
@@ -315,6 +315,10 @@ def start(CELL_SIZE: int, m:int, n:int) -> None:
                 player.x += dx
                 player.y += dy
 
+                for z in zombies:
+                    z.x += dx
+                    z.y += dy
+
                 for cell in cell_maze:
                     cell.xpos += dx
                     cell.ypos += dy
@@ -362,4 +366,4 @@ def start(CELL_SIZE: int, m:int, n:int) -> None:
 
 
 if __name__ == "__main__":
-    start(500, 8, 8)
+    start(60, 500, 8, 8)
