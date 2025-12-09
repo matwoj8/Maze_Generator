@@ -25,7 +25,6 @@ class Character(object):
     def update(self, screen, x, y):
         self.x = x
         self.y = y
-        self.draw(screen)
 
     def move(self, screen, lr, ud): #wektor ruchu left right up down
         #przejśćie w prawo

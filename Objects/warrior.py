@@ -4,6 +4,8 @@ import math
 
 
 class Warrior(Character):
+
+
     def __init__(self, x, y):
         super().__init__(x, y, name='warrior')
         self.is_attacking = False
@@ -14,6 +16,17 @@ class Warrior(Character):
         self.sword_width = 5
         self.direction = 0
         self.attack_direction = 0
+        self.images = {
+            0: pygame.image.load("./Graphics/player/warrior/left.png"),
+            1: pygame.image.load("./Graphics/player/warrior/left_up.png"),
+            2: pygame.image.load("./Graphics/player/warrior/up.png"),
+            3: pygame.image.load("./Graphics/player/warrior/right_up.png"),
+            4: pygame.image.load("./Graphics/player/warrior/right.png"),
+            5: pygame.image.load("./Graphics/player/warrior/right_down.png"),
+            6: pygame.image.load("./Graphics/player/warrior/down.png"),
+            7: pygame.image.load("./Graphics/player/warrior/left_down.png"),
+            "default": pygame.image.load("./Graphics/player/warrior/default.png")
+        }
 
     def attack(self):
         current = pygame.time.get_ticks()
@@ -26,6 +39,13 @@ class Warrior(Character):
 
         self.last_attack_time = current
         self.is_attacking = True
+
+    def draw(self, screen):
+        image = self.images.get(self.direction, self.images.get("default"))
+
+        rect = image.get_rect(center=(self.x, self.y))
+
+        screen.blit(image, rect)
 
     def draw_sword(self, screen):
         if not self.is_attacking:
