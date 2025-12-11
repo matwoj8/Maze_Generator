@@ -1,0 +1,6 @@
+Kruskal’s algorithm begins by treating every cell as its own separate set and listing all walls between adjacent cells:
+ - All walls are shuffled into random order.
+ - The algorithm takes each wall and checks the two cells it separates.
+ - If the cells belong to different sets, the wall is removed and the two sets are merged.
+ - If they are already in the same set, the wall is kept to avoid creating a loop.
+This process continues until all cells belong to a single connected set, producing a perfect maze with no cycles and no isolated areas.

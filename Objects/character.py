@@ -93,7 +93,7 @@ class Character(object):
             case 7:
                 self.move(screen, -speed, speed)
 
-    # ta funkcje mozna w zasadzie zrenamowac teleport i wrzucic ja do mage'a
+
     def knockback(self, grip_x, grip_y, distance=100, steps=10):
         vx = self.x - grip_x
         vy = self.y - grip_y
@@ -107,7 +107,7 @@ class Character(object):
 
         step_dist = distance / steps
 
-        self.knockback_queue.clear()  # nadpisuj (albo usuń jeśli chcesz stackować)
+        self.knockback_queue.clear()
         for _ in range(steps):
             self.knockback_queue.append((nx * step_dist, ny * step_dist))
 

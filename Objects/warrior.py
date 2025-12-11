@@ -73,6 +73,7 @@ class Warrior(Character):
 
         possible_targets = self.cell.get_nearby_characters()
 
+        # cala la logika jest generalnie troche useless, bo istnieja od tego funkcje w pygame, ale to moze poprawie
         # generalnie zmienilem te logika knockbackow w stosunku do tego co bylo
         for character in possible_targets:
             #print("character has been hit", character.name)
@@ -86,7 +87,7 @@ class Warrior(Character):
                 # różnica między kątem miecza a przeciwnikiem
                 angle_diff = abs((target_angle - total_angle + math.pi) % (2 * math.pi) - math.pi)
 
-                if (distance <= self.sword_length and angle_diff < math.radians(5)) or distance <= self.sword_length*1/3:
+                if (distance <= self.sword_length and angle_diff < math.radians(10)) or distance <= self.sword_length*1/3:
                     #print("character has been hit", character.name)
                     character.knockback(int(grip_x), int(grip_y), 200)
 

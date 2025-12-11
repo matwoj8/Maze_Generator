@@ -7,6 +7,8 @@ import maze_generators.mazes.Binary_Tree_Maze as bt
 import maze_generators.mazes.Origin_Shift_Maze as os
 import maze_generators.converter as ct
 import maze_generators as mg
+from maze_generators.mazes import Kruskal_Maze
+
 
 def start(maze, path, n, m):
     pygame.init()
@@ -90,6 +92,6 @@ def start(maze, path, n, m):
 
 if __name__ == "__main__":
     n, m = 12, 12
-    maze, path = os.generate_maze(n, m, 100)
+    maze, path = Kruskal_Maze.generate_maze(n, m)
     maze = mg.converter.maze_convert(maze)
     start(maze, path, n, m)
