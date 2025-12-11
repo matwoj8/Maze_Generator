@@ -64,6 +64,6 @@ def spawn_random_zombie(player, cell_maze, zombies):
 
     zombie = Zombie(zx, zy)
     zombie.cell = chosen
-    chosen.characters.append(zombie)
+    chosen.characters.add(zombie)
 
     zombies.append(zombie)

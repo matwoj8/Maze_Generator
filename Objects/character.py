@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import getId as gi
 
@@ -33,9 +35,9 @@ class Character(object):
         if lr>0:
             if self.x+lr >= self.cell.xpos+self.cell.size and self.cell.right_cell and self.cell.right:
                 self.update(screen, self.x+lr, self.y)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.right_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, min(self.x+lr, self.cell.xpos+self.cell.size), self.y)
 
@@ -43,9 +45,9 @@ class Character(object):
         if ud<0:
             if self.y+ud <= self.cell.ypos and self.cell.up_cell and self.cell.up:
                 self.update(screen, self.x, self.y+ud)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.up_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, self.x, max(self.y+ud, self.cell.ypos))
 
@@ -53,9 +55,9 @@ class Character(object):
         if lr<0:
             if self.cell.xpos >= self.x + lr and self.cell.left_cell and self.cell.left:
                 self.update(screen, self.x + lr, self.y)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.left_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, max(self.x + lr, self.cell.xpos), self.y)
 
@@ -63,9 +65,9 @@ class Character(object):
         if ud>0:
             if self.y + ud >= self.cell.ypos + self.cell.size and self.cell.down_cell and self.cell.down:
                 self.update(screen, self.x, self.y + ud)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.down_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, self.x, min(self.y + ud, self.cell.ypos+self.cell.size))
 
@@ -101,3 +103,7 @@ class Character(object):
         ny = vy / length
 
         self.move(screen, int(nx * distance), int(ny * distance))
+
+def distance_between_characters(c1, c2) -> int: #moznaby floata ale piksele i tak liczymy cale wiec oo co
+    distance = math.sqrt((c2.x - c1.x)**2 + (c2.y - c1.y)**2)
+    return int(distance)

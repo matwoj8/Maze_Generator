@@ -55,7 +55,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     zombies = []
     last_move_time = 0
     ZOMBIE_MOVE_INTERVAL = 60
-    ZOMBIES_LIMIT = 10
+    ZOMBIES_LIMIT = 5
 
 
     #odczytywanie plikow tekstowych
@@ -263,7 +263,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
                 if chosen_character == 'warrior': player = warrior.Warrior(sx, sy)
                 else: player = character.Character(sx, sy, chosen_character)
-                cell_maze[0].characters.append(player)
+                cell_maze[0].characters.add(player)
                 player.cell = cell_maze[0]
                 #print(cell_maze)
                 generated = True
@@ -353,6 +353,12 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 last_move_time = current_time
             for z in zombies:
                 z.draw(screen)
+
+            # tez do debuggowania
+            # for cell in cell_maze:
+            #     for c in cell.characters:
+            #         print(c.id, end = " ")
+            #     print()
 
         pygame.display.flip()
 
