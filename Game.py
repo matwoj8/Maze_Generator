@@ -9,6 +9,7 @@ from pygame.examples.moveit import HEIGHT
 import Visuals.utility_functions as utility
 import maze_generators.mazes.Hunt_And_Kill_Maze as hak
 import maze_generators.mazes.Binary_Tree_Maze as bt
+import maze_generators.mazes.Kruskal_Maze as km
 import maze_generators.mazes.Origin_Shift_Maze as os
 import maze_generators.converter as ct
 import maze_generators as mg
@@ -16,6 +17,8 @@ import Objects.character as character
 import Objects.zombie as zom
 import Objects.warrior as warrior
 import text
+from Objects import archer, mage
+
 
 def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     pygame.init()
@@ -55,7 +58,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     zombies = []
     last_move_time = 0
     ZOMBIE_MOVE_INTERVAL = 60
-    ZOMBIES_LIMIT = 10
+    ZOMBIES_LIMIT = 50
 
 
     #odczytywanie plikow tekstowych
@@ -64,6 +67,9 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
 
     with open("text/hunt_and_kill", "r", encoding="utf-8") as f:
         hunt_and_kill_description = f.read()
+
+    with open("text/kruskal", "r", encoding="utf-8") as f:
+        kruskal_description = f.read()
 
     def reset_stats():
         nonlocal visited, generated, steps_generated, i
@@ -143,7 +149,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
             if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_binary_tree"
             if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_hunt_and_kill"
             if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_origin_shift"
-            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_cos"
+            if utility.draw_button(screen, "Kruskal", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_kruskal"
 
         elif game_state == "extras_maze_generators_binary_tree":
             if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font):
@@ -162,8 +168,8 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 game_state = "extras_maze_generators_origin_shift"
                 reset_stats()
                 continue
-            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
-                game_state = "extras_maze_generators_cos"
+            if utility.draw_button(screen, "Kruskal", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_kruskal"
                 reset_stats()
                 continue
 
@@ -176,7 +182,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 i = 0
 
             visited.append(cell_maze[path[i]])
-            utility.draw_maze_cells_steps(screen, zoom, 60, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
+            utility.draw_maze_cells_steps(screen, zoom, CELL_SIZE_STEP, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
 
             pygame.display.flip()
             time.sleep(0.1)
@@ -204,8 +210,8 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 game_state = "extras_maze_generators_origin_shift"
                 reset_stats()
                 continue
-            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
-                game_state = "extras_maze_generators_cos"
+            if utility.draw_button(screen, "Kruskal", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_kruskal"
                 reset_stats()
                 continue
 
@@ -218,7 +224,7 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 i = 0
 
             visited.append(cell_maze[path[i]])
-            utility.draw_maze_cells_steps(screen, zoom, 60, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
+            utility.draw_maze_cells_steps(screen, zoom, CELL_SIZE_STEP, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
 
             pygame.display.flip()
             time.sleep(0.1)
@@ -230,16 +236,75 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
 
 
         elif game_state == "extras_maze_generators_origin_shift":
-            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font): game_state = "extras"
-            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_binary_tree"
-            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_hunt_and_kill"
-            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05,  font=font): game_state = "extras_maze_generators_origin_shift"
-            if utility.draw_button(screen, "ALGORYTM KONDZIA", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font): game_state = "extras_maze_generators_cos"
+            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font):
+                game_state = "extras"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05,
+                                   font=font):
+                game_state = "extras_maze_generators_binary_tree"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05,
+                                   font=font):
+                game_state = "extras_maze_generators_hunt_and_kill"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05,
+                                   font=font):
+                game_state = "extras_maze_generators_origin_shift"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Kruskal", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05,
+                                   font=font):
+                game_state = "extras_maze_generators_kruskal"
+                reset_stats()
+                continue
 
             if steps_generated is False:
                 maze, path = os.generate_maze(5, 5, 100)
-                cell_maze = ct.convert_to_cells(maze, CELL_SIZE, x, y)
-                # cell_maze = ct.convert_to_cells_twosides(maze, x, y)
+                cell_maze = ct.convert_to_cells_twosides(maze, CELL_SIZE_STEP, x, y)
+                steps_generated = True
+                i = 0
+
+            visited.append(cell_maze[path[i]])
+            utility.draw_maze_cells_steps(screen, zoom, CELL_SIZE_STEP, cell_maze[path[i]], visited, WIDTH * 0.4, HEIGHT * 0.1)
+
+            pygame.display.flip()
+            time.sleep(0.1)
+            i += 1
+            if i >= len(path):
+                i = 0
+                visited = []
+                time.sleep(1)
+
+        elif game_state == "extras_maze_generators_kruskal":
+            if utility.draw_button(screen, "Back", WIDTH * 0.47, HEIGHT * 0.86, WIDTH * 0.06, HEIGHT * 0.03, font=font):
+                game_state = "extras"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Binary Tree", WIDTH * 0.04, HEIGHT * 0.20, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_binary_tree"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Hund And Kill", WIDTH * 0.04, HEIGHT * 0.3, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_hunt_and_kill"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Origin Shift", WIDTH * 0.04, HEIGHT * 0.4, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_origin_shift"
+                reset_stats()
+                continue
+            if utility.draw_button(screen, "Kruskal", WIDTH * 0.04, HEIGHT * 0.5, WIDTH * 0.2, HEIGHT * 0.05, font=font):
+                game_state = "extras_maze_generators_kruskal"
+                reset_stats()
+                continue
+
+            utility.write_text(screen, kruskal_description, WIDTH * 0.3, HEIGHT * 0.6, font = font, color = (128,128,255))
+
+            if steps_generated is False:
+                maze, path = km.generate_maze(5, 5)
+                cell_maze = ct.convert_to_cells(maze,CELL_SIZE_STEP, x, y)
                 steps_generated = True
                 i = 0
 
@@ -262,8 +327,9 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 cell_maze = list(ct.convert_to_cells(maze, CELL_SIZE, x, y).values())
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
                 if chosen_character == 'warrior': player = warrior.Warrior(sx, sy)
-                else: player = character.Character(sx, sy, chosen_character)
-                cell_maze[0].characters.append(player)
+                elif chosen_character == "archer": player = archer.Archer(sx, sy)
+                else: player = mage.Mage(sx, sy)
+                cell_maze[0].characters.add(player)
                 player.cell = cell_maze[0]
                 #print(cell_maze)
                 generated = True
@@ -344,15 +410,25 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                     cell.ypos += dy
 
             player.draw(screen)
-            player.draw_sword(screen)
+            if chosen_character == "warrior":
+                player.draw_sword(screen)
 
             current_time = pygame.time.get_ticks()
             if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
                 for z in zombies:
-                    z.random_walk(screen, player)
+                    if z.knockback_queue:
+                        z.update_knockback(screen)
+                    else:
+                        z.random_walk(screen, player)
                 last_move_time = current_time
             for z in zombies:
                 z.draw(screen)
+
+            # tez do debuggowania
+            # for cell in cell_maze:
+            #     for c in cell.characters:
+            #         print(c.id, end = " ")
+            #     print()
 
         pygame.display.flip()
 
@@ -362,4 +438,4 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
 
 
 if __name__ == "__main__":
-    start(60, 500, 3, 3)
+    start(60, 500, 12, 12)

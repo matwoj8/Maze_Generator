@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import getId as gi
 
@@ -20,6 +22,8 @@ class Character(object):
         self.direction = None
         self.speed = None
         self.hitbox = (self.x, self.y, 10) #na razie modele to kółka więc hitbox jest brany jako x,y i radius kołą
+        self.is_knockbacked = False
+        self.knockback_queue = []
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (self.x, self.y), 10)
@@ -33,9 +37,9 @@ class Character(object):
         if lr>0:
             if self.x+lr >= self.cell.xpos+self.cell.size and self.cell.right_cell and self.cell.right:
                 self.update(screen, self.x+lr, self.y)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.right_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, min(self.x+lr, self.cell.xpos+self.cell.size), self.y)
 
@@ -43,9 +47,9 @@ class Character(object):
         if ud<0:
             if self.y+ud <= self.cell.ypos and self.cell.up_cell and self.cell.up:
                 self.update(screen, self.x, self.y+ud)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.up_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, self.x, max(self.y+ud, self.cell.ypos))
 
@@ -53,9 +57,9 @@ class Character(object):
         if lr<0:
             if self.cell.xpos >= self.x + lr and self.cell.left_cell and self.cell.left:
                 self.update(screen, self.x + lr, self.y)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.left_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, max(self.x + lr, self.cell.xpos), self.y)
 
@@ -63,9 +67,9 @@ class Character(object):
         if ud>0:
             if self.y + ud >= self.cell.ypos + self.cell.size and self.cell.down_cell and self.cell.down:
                 self.update(screen, self.x, self.y + ud)
-                self.cell.characters.remove(self)
+                self.cell.characters.discard(self)
                 self.cell = self.cell.down_cell
-                self.cell.characters.append(self)
+                self.cell.characters.add(self)
             else:
                 self.update(screen, self.x, min(self.y + ud, self.cell.ypos+self.cell.size))
 
@@ -89,7 +93,8 @@ class Character(object):
             case 7:
                 self.move(screen, -speed, speed)
 
-    def knockback(self, screen, grip_x, grip_y, distance=100):
+
+    def knockback(self, grip_x, grip_y, distance=100, steps=10):
         vx = self.x - grip_x
         vy = self.y - grip_y
 
@@ -100,4 +105,17 @@ class Character(object):
         nx = vx / length
         ny = vy / length
 
-        self.move(screen, int(nx * distance), int(ny * distance))
+        step_dist = distance / steps
+
+        self.knockback_queue.clear()
+        for _ in range(steps):
+            self.knockback_queue.append((nx * step_dist, ny * step_dist))
+
+    def update_knockback(self, screen):
+        if self.knockback_queue:
+            dx, dy = self.knockback_queue.pop(0)
+            self.move(screen, dx, dy)
+
+def distance_between_characters(c1, c2) -> int: #moznaby floata ale piksele i tak liczymy cale wiec oo co
+    distance = math.sqrt((c2.x - c1.x)**2 + (c2.y - c1.y)**2)
+    return int(distance)
