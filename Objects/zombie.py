@@ -8,6 +8,24 @@ class Zombie(Character):
         self.speed = 3
         self.direction = random.randint(0, 7)
         self.player_spotted = False
+        self.images = {
+            0: pygame.image.load("./Graphics/monster/zombie/left.png"),
+            1: pygame.image.load("./Graphics/monster/zombie/left_up.png"),
+            2: pygame.image.load("./Graphics/monster/zombie/up.png"),
+            3: pygame.image.load("./Graphics/monster/zombie/right_up.png"),
+            4: pygame.image.load("./Graphics/monster/zombie/right.png"),
+            5: pygame.image.load("./Graphics/monster/zombie/right_down.png"),
+            6: pygame.image.load("./Graphics/monster/zombie/down.png"),
+            7: pygame.image.load("./Graphics/monster/zombie/left_down.png"),
+            "default": pygame.image.load("./Graphics/monster/zombie/default.png")
+        }
+
+    def draw(self, screen):
+        image = self.images.get(self.direction, self.images.get("default"))
+
+        rect = image.get_rect(center=(self.x, self.y))
+
+        screen.blit(image, rect)
 
     def random_walk(self, screen, player):
         self.looking_for_player(player)

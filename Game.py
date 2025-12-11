@@ -16,6 +16,8 @@ import Objects.character as character
 import Objects.zombie as zom
 import Objects.warrior as warrior
 import text
+from Objects import archer, mage
+
 
 def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
     pygame.init()
@@ -262,7 +264,8 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                 cell_maze = list(ct.convert_to_cells(maze, CELL_SIZE, x, y).values())
                 sx, sy = cell_maze[0].xpos + CELL_SIZE / 2, cell_maze[0].ypos + CELL_SIZE / 2
                 if chosen_character == 'warrior': player = warrior.Warrior(sx, sy)
-                else: player = character.Character(sx, sy, chosen_character)
+                elif chosen_character == "archer": player = archer.Archer(sx, sy)
+                else: player = mage.Mage(sx, sy)
                 cell_maze[0].characters.add(player)
                 player.cell = cell_maze[0]
                 #print(cell_maze)
@@ -344,7 +347,8 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
                     cell.ypos += dy
 
             player.draw(screen)
-            player.draw_sword(screen)
+            if chosen_character == "warrior":
+                player.draw_sword(screen)
 
             current_time = pygame.time.get_ticks()
             if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
