@@ -22,6 +22,8 @@ class Character(object):
         self.direction = None
         self.speed = None
         self.hitbox = (self.x, self.y, 10) #na razie modele to kółka więc hitbox jest brany jako x,y i radius kołą
+        self.is_knockbacked = False
+        self.knockback_queue = []
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (self.x, self.y), 10)
@@ -91,7 +93,8 @@ class Character(object):
             case 7:
                 self.move(screen, -speed, speed)
 
-    def knockback(self, screen, grip_x, grip_y, distance=100):
+    # ta funkcje mozna w zasadzie zrenamowac teleport i wrzucic ja do mage'a
+    def knockback(self, grip_x, grip_y, distance=100, steps=10):
         vx = self.x - grip_x
         vy = self.y - grip_y
 
@@ -102,7 +105,16 @@ class Character(object):
         nx = vx / length
         ny = vy / length
 
-        self.move(screen, int(nx * distance), int(ny * distance))
+        step_dist = distance / steps
+
+        self.knockback_queue.clear()  # nadpisuj (albo usuń jeśli chcesz stackować)
+        for _ in range(steps):
+            self.knockback_queue.append((nx * step_dist, ny * step_dist))
+
+    def update_knockback(self, screen):
+        if self.knockback_queue:
+            dx, dy = self.knockback_queue.pop(0)
+            self.move(screen, dx, dy)
 
 def distance_between_characters(c1, c2) -> int: #moznaby floata ale piksele i tak liczymy cale wiec oo co
     distance = math.sqrt((c2.x - c1.x)**2 + (c2.y - c1.y)**2)

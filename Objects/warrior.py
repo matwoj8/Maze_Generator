@@ -88,5 +88,5 @@ class Warrior(Character):
 
                 if (distance <= self.sword_length and angle_diff < math.radians(5)) or distance <= self.sword_length*1/3:
                     #print("character has been hit", character.name)
-                    character.knockback(screen, grip_x, grip_y, 200)
+                    character.knockback(int(grip_x), int(grip_y), 200)
 

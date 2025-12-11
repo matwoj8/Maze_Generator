@@ -1,6 +1,5 @@
 import pygame
 import random
-
 from Objects.character import Character
 
 class Zombie(Character):

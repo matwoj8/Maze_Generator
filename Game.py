@@ -349,7 +349,10 @@ def start(CELL_SIZE_STEP: int, CELL_SIZE: int, m:int, n:int) -> None:
             current_time = pygame.time.get_ticks()
             if current_time - last_move_time >= ZOMBIE_MOVE_INTERVAL:
                 for z in zombies:
-                    z.random_walk(screen, player)
+                    if z.knockback_queue:
+                        z.update_knockback(screen)
+                    else:
+                        z.random_walk(screen, player)
                 last_move_time = current_time
             for z in zombies:
                 z.draw(screen)
